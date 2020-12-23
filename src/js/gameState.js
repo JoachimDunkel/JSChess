@@ -14,7 +14,14 @@ class GameState {
         this.board.setPieces(pieceFactory.createFullSetFor(Player.WHITE));
         this.board.setPieces(pieceFactory.createFullSetFor(Player.BLACK));
         console.log("Board initialized");
+
+        //Testing my Engine implementation...
         this.board.printBoard();
+        let ePawn = this.board.getObjAtPosition(new Position(4,1));
+        let moveGenerator = new MoveGenerator(this);
+        let possibleMoves = moveGenerator.generateMovesFor(ePawn);
+        
+
     }
 
     update(move){

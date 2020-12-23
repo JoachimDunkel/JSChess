@@ -3,5 +3,16 @@ class Position {
         this.x = x;
         this.y = y;
     }
-    //some other necessary overloads ??
+
+    add(position){
+        let x = this.x + position.x;
+        let y = this.y + position.y;
+        return new Position(x,y);
+    }
+
+    multiply(position){
+        let x = this.x * position.x;
+        let y = this.y * position.y;
+        return new Position(x,y);
+    }
 }
