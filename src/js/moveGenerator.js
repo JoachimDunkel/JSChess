@@ -1,33 +1,24 @@
 class MoveGenerator {
     constructor(gameState) {
         this._gameState = gameState;
-        this._movePatterns = {
-            ROOK : {HORIZONTAL: BoardSize, VERTICAL: BoardSize} ,
-            BISHOP: {DIAGONAL: BoardSize},
-            KNIGHT: MoveType.KNIGHT,
-            PAWN: {VERTICAL : 1},
-            QUEEN: {HORIZONTAL: BoardSize, VERTICAL: BoardSize, DIAGONAL: BoardSize},
-            KING: {HORIZONTAL: 1, VERTICAL: 1, DIAGONAL: 1},
-        }
         this._moveValidator = new MoveValidator(gameState);
 
     }
 
     generateMovesFor(piece){
-        let movePattern = this._movePatterns[piece.getType()];
         switch (piece.getType()) {
             case PieceType.PAWN:
-                return this._createPawnMoves(piece, movePattern);
+                return this._createPawnMoves(piece);
             case PieceType.ROOK:
-                return this._createRookMoves(piece, movePattern);
+                return this._createRookMoves(piece);
             case PieceType.KING:
-                return this._createKingMoves(piece, movePattern);
+                return this._createKingMoves(piece);
             case PieceType.QUEEN:
-                return this._createQueenMoves(piece, movePattern);
+                return this._createQueenMoves(piece);
             case PieceType.KNIGHT:
-                return this._createKnightMoves(piece, movePattern);
+                return this._createKnightMoves(piece);
             case PieceType.BISHOP:
-                return this._createBishopMoves(piece, movePattern);
+                return this._createBishopMoves(piece);
         }
     }
     _createKingMoves(piece){
@@ -44,11 +35,16 @@ class MoveGenerator {
             new Position(1,-1),
         ]
 
-        let queenCastle = new Position(3,0);
-        let kingSideCastle = new Position(-2,0);
+        //TODO move validator can quennside castle => add
+        //TODO mvoe validator can kingside castle => add
+        //TODO can not move into a check..
+            //Validate all moves if I go on a square that can be reached from the opponent.
 
-        possibleMoves.push(queenCastle);
-        possibleMoves.push(kingSideCastle);
+        // let queenCastle = new Position(3,0);
+        // let kingSideCastle = new Position(-2,0);
+        //
+        // possibleMoves.push(queenCastle);
+        // possibleMoves.push(kingSideCastle);
 
         return this._moveValidator.invalidateAllMoves(piece, possibleMoves);
     }
@@ -129,6 +125,8 @@ class MoveGenerator {
                 }
                 break;
             }
+
+            //TODO convert to move and see if opponent king is in check. if yes the set move type to check...
             possibleMoves.push(position);
         }
     }

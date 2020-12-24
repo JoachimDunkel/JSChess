@@ -4,6 +4,7 @@ class Game {
     constructor(connectionHandler, myPlayerType) {
         this.connectionHandler = connectionHandler;
         this.gameState = new GameState();
+        this.gameState.fillBoardWithPieces();
         this.myPlayerType = myPlayerType;
     }
 

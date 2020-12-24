@@ -8,4 +8,4 @@ const Player = {WHITE :0, BLACK: 1};
 
 const BoardSize = 8;
 
-const MoveType = { HORIZONTAL : 0, VERTICAL : 1, DIAGONAL : 2, KNIGHT : 3}
+const MoveType = {DEFAULT : 0, EN_PASSANT : 1, CASTLE : 2,  CHECKING: 3, PAWN_PROMOTION :4}
