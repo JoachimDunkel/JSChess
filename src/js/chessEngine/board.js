@@ -63,5 +63,19 @@ class Board {
     moveIsOutOfBounds(position) {
         return (position.x < 0 || position.x > 7 || position.y < 0 || position.y > 7);
     }
+
+    makeMove(move){
+
+    }
+
+    makeCastle(move){
+        //find out the correct rook.
+        //then makeMove(rook)
+        //and makeMove(king)
+    }
+
+    clearField(piece){
+        this._board[piece.getPosition().x][piece.getPosition().y] = PieceType.NONE;
+    }
 }
 

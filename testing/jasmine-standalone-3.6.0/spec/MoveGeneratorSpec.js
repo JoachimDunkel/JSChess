@@ -85,6 +85,7 @@ describe("MoveGenerator", () => {
         gameState.board.setPiece(ownPawn);
         let result = moveGenerator.generateMovesFor(knight);
 
+
         expect(result.length).toBe(1);
         expect(result).toContain(new Position(1,2));
     });
