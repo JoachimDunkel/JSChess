@@ -86,8 +86,6 @@ class MoveGenerator {
            }
         });
 
-        this._bulkSetIsCheckingMove(pawnMoves);
-
         return pawnMoves;
     }
 
@@ -103,7 +101,6 @@ class MoveGenerator {
         //create down moves
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(0,-1));
 
-        this._bulkSetIsCheckingMove(possibleMoves);
         return possibleMoves;
     }
 
@@ -116,8 +113,6 @@ class MoveGenerator {
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(-1,1));
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(1,1));
 
-        this._bulkSetIsCheckingMove(possibleMoves);
-
         return possibleMoves;
     }
 
@@ -126,22 +121,19 @@ class MoveGenerator {
     }
 
     _createKnightMoves(piece){
-        let possibleMoves = [
+        return [
             new Move(piece, MoveType.DEFAULT, new Position(-1, 2)),
-            new Move(piece, MoveType.DEFAULT,new Position(1, 2)),
+            new Move(piece, MoveType.DEFAULT, new Position(1, 2)),
 
-            new Move(piece, MoveType.DEFAULT,new Position(2, -1)),
-            new Move(piece, MoveType.DEFAULT,new Position(2, 1)),
+            new Move(piece, MoveType.DEFAULT, new Position(2, -1)),
+            new Move(piece, MoveType.DEFAULT, new Position(2, 1)),
 
-            new Move(piece, MoveType.DEFAULT,new Position(-1, -2)),
-            new Move(piece, MoveType.DEFAULT,new Position(1, -2)),
+            new Move(piece, MoveType.DEFAULT, new Position(-1, -2)),
+            new Move(piece, MoveType.DEFAULT, new Position(1, -2)),
 
-            new Move(piece, MoveType.DEFAULT,new Position(-2, 1)),
-            new Move(piece, MoveType.DEFAULT,new Position(-2, -1)),
+            new Move(piece, MoveType.DEFAULT, new Position(-2, 1)),
+            new Move(piece, MoveType.DEFAULT, new Position(-2, -1)),
         ];
-
-        this._bulkSetIsCheckingMove(possibleMoves);
-        return possibleMoves;
     }
 
     _addMoveForEveryEmptyField(possibleMoves, piece, moveDirection){
@@ -217,12 +209,4 @@ class MoveGenerator {
 
     }
 
-    _bulkSetIsCheckingMove(moves){
-        moves.forEach(move => {
-            let opponentKing = this._gameState.checkingHandler.getOpponentKing();
-            if(move.newPosition.equals(opponentKing.getPosition())){
-                move.moveType = move.moveType | MoveType.CHECKING;
-            }
-        });
-    }
 }

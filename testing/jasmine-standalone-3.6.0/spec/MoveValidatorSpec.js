@@ -53,6 +53,30 @@ describe("MoveValidator", () =>{
         expect(result).toBeFalse();
     });
 
+    it('Bulk Sets is checking Move For Moves Looking at the king ', function () {
+        let rook = new Piece(Player.WHITE, PieceType.ROOK, new Position(3,3), "irrelevant");
+        let oppKing = new Piece(Player.BLACK, PieceType.KING, new Position(0,1), "irrelevant")
+        let myKing = new Piece(Player.WHITE, PieceType.KING, new Position(7,7), "irrelevant");
+
+        gameState.board.setPiece(rook);
+        gameState.board.setPiece(oppKing);
+        gameState.board.setPiece(myKing);
+
+        gameState.checkingHandler.setupKings(myKing,oppKing);
+
+        let possibleRookMoves = new MoveGenerator(gameState).generateMovesFor(rook);
+
+        let validMoves = moveValidator.invalidateAllMoves(possibleRookMoves);
+
+        moveValidator.bulkSetIsCheckingMove(validMoves);
+
+        expect(validMoves.length).toBe(14);
+
+        let numCheckingMoves = validMoves.filter((move) => (move.moveType & MoveType.CHECKING)).length;
+
+        expect(numCheckingMoves).toBe(2);
+    });
+
     //TODO if I am in check...
 
     //TODO if I make a king move...

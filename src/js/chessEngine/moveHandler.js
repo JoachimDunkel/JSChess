@@ -37,6 +37,8 @@ class MoveHandler {
             }
         });
 
+        this.moveValidator.bulkSetIsCheckingMove(validMoves);
+
         return null;
     }
 

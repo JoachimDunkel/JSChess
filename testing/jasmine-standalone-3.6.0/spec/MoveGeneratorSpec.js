@@ -52,7 +52,8 @@ describe("MoveGenerator", () => {
 
 
     //TODO add tests for every piece type..
-    //TODO test bulk set is checking move...
+
+
     //test king side castle possible
     //test queenside castle possible
     //test pawncanEnpassant.

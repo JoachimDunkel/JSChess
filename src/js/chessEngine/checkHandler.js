@@ -40,8 +40,13 @@ class CheckHandler {
         }
     }
 
-    //TODO...
     getOpponentKing(){
+        if(this.myColor === Player.WHITE){
+            return this.blackKing;
+        }
+        else{
+            return this.whiteKing;
+        }
 
     }
 

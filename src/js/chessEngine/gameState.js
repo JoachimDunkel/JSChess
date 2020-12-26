@@ -14,7 +14,7 @@ class GameState {
 
         this.lastMoveMade = null;
 
-        this.checkingHandler = new CheckHandler();
+        this.checkingHandler = new CheckHandler(this.myColor);
     }
 
     fillBoardWithPieces(){
@@ -91,5 +91,7 @@ class GameState {
         }
     }
 
-
+    print(){
+        console.log(json.stringify(this));
+    }
 }

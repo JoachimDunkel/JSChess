@@ -10,6 +10,8 @@ class Board {
         for(let i = 0; i < BoardSize; i++){
             this._board[i] = [];
             for(let j = 0; j < BoardSize; j++){
+
+                //TODO change with null;
                 //having multiple different object types is kinda dirty... maybe create field object that contains a piece or not..
                 this._board[i][j] = PieceType.NONE;
             }
@@ -65,7 +67,11 @@ class Board {
     }
 
     makeMove(move){
-
+        let piece = move.piece;
+        this.clearField(piece);
+        piece.setPosition(move.newPosition);
+        this.clearField(piece);
+        this.setPiece(piece);
     }
 
     makeCastle(move){
