@@ -6,20 +6,18 @@ class MoveValidator {
 
     moveIsValid(move){
         //Check if move is in bounds
-        let position = move.piece.getPosition().add(move.newPosition);
-        if(this._gameState.board.moveIsOutOfBounds(position))
+        if(this._gameState.board.moveIsOutOfBounds(move.newPosition))
             return false;
 
         //Check if move is blocked by own piece
-        let obj = this._gameState.board.getObjAtPosition(position)
+        let obj = this._gameState.board.getObjAtPosition(move.newPosition)
         if(obj instanceof Piece){
             if(obj.getPlayerType() === move.piece.getPlayerType()){
                 return false;
             }
         }
         //if my own king is in check the move has to end the check otherwise not valid..
-        //or if i move the king he can not move into a check..
-        if(this._gameState.iAmInCheck() || move.moveType === MoveType.KING_MOVE){
+        if(this._gameState.checkingHandler.iAmInCheck()){
             //deep copy board.. fuck javascript //TODO probably not working like this..
             let newGameState = JSON.parse(JSON.stringify(this._gameState))
             newGameState.makeMove(move);
@@ -34,13 +32,19 @@ class MoveValidator {
                 })
             }
         }
+
+        //if king move .. we need to know if any opponent piece attacks that field
+        if( move.moveType === MoveType.KING_MOVE){
+            //TODO not working yet..
+            //To get this to work we maybe have to always save every field attacked by every opponent piece..
+        }
         return true;
     }
 
-    invalidateAllMoves(piece, movesToValidate){
+    invalidateAllMoves(movesToValidate){
         let validMoves = [];
-        movesToValidate.forEach( move => {
-            if(this.moveIsValid(piece, move)) validMoves.push(move);
+        movesToValidate.forEach(move => {
+            if(this.moveIsValid(move)) validMoves.push(move);
         })
         return validMoves;
     }

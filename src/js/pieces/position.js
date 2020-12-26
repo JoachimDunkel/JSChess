@@ -15,4 +15,8 @@ class Position {
         let y = this.y * position.y;
         return new Position(x,y);
     }
+
+    equals(position){
+        return (this.x === position.x && this.y === position.y);
+    }
 }

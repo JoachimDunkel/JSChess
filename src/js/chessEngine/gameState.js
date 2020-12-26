@@ -12,6 +12,8 @@ class GameState {
         this.whiteKingHasMoved = false;
         this.blackKingHasMoved = false;
 
+        this.lastMoveMade = null;
+
         this.checkingHandler = new CheckHandler();
     }
 
@@ -34,6 +36,7 @@ class GameState {
     update(move){
         console.log("Game state updated");
         this.makeMove(move);
+        this.lastMoveMade = move;
         //TODO and so on...
         //update counters
         //change currentplayer
@@ -42,8 +45,12 @@ class GameState {
     }
 
     makeMove(move){
+
+        //TODO convert to if checks... so we can have multiple cases..
         switch (move.moveType) {
             case MoveType.CHECKING:
+                //add to checking pieces..
+
                 this.checkingHandler.setOpponentInCheck();
                 this.board.makeMove(move);
                 //TODO check for check make ..
@@ -57,6 +64,8 @@ class GameState {
                 //change the existing pawn on the board with a queen.. or something that the user selected
                 //.. start pawn-promotion user interaction..
                 //if we want to implement that.
+
+                //after promotion check if the king is now in check..
                 break;
             case MoveType.CASTLE:
                 this.board.makeCastle(move);

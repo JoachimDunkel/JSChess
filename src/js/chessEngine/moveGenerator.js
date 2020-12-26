@@ -47,16 +47,48 @@ class MoveGenerator {
         return possibleMoves;
     }
 
-    //todo check promotion move outside
-    //TODO dynamically add pawn moves based on methods what the pawn can do...
     _createPawnMoves(piece){
-        let blackPawnMoves = [new Position(0, -1), new Position(0, -2), new Position(-1,-1), new Position(1,-1)];
-        let whitePawnMoves = [new Position(0, 1), new Position(0, 2), new Position(-1,1), new Position(1,1)];
-        let possibleMoves = blackPawnMoves;
-        if(piece.getPlayerType() === Player.WHITE){
-            possibleMoves = whitePawnMoves;
+        let y = 1;
+        let promotion_row = 7;
+
+        if(piece.getPlayerType() === Player.BLACK){
+            y = -1;
+            promotion_row = 0;
         }
-        return possibleMoves;
+
+        let pawnMoves = [
+            new Move(piece, MoveType.DEFAULT, new Position(0, y)),
+        ]
+        if(this._pawnCanMoveTwoSquares(piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0,2*y)));
+        }
+
+        if(this._pawnCanTakeLeft(piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(-1, y)));
+        }
+
+        if(this._pawnCanTakeRight(piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(1, y)));
+        }
+
+        if(this._pawnCanEnPassant(piece)){
+            if(this._gameState.lastMoveMade.piece.getPosition().x > piece.getPosition().x){
+                pawnMoves.push(new Move(piece, MoveType.EN_PASSANT, new Position(1,y)));
+            }
+            else{
+                pawnMoves.push(new Move(piece, MoveType.EN_PASSANT, new Position(-1, y)));
+            }
+        }
+
+        pawnMoves.forEach(move => {
+           if(move.newPosition.y === promotion_row){
+               move.moveType = move.moveType | MoveType.PAWN_PROMOTION;
+           }
+        });
+
+        this._bulkSetIsCheckingMove(pawnMoves);
+
+        return pawnMoves;
     }
 
     _createRookMoves(piece){
@@ -71,6 +103,7 @@ class MoveGenerator {
         //create down moves
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(0,-1));
 
+        this._bulkSetIsCheckingMove(possibleMoves);
         return possibleMoves;
     }
 
@@ -83,6 +116,8 @@ class MoveGenerator {
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(-1,1));
         this._addMoveForEveryEmptyField(possibleMoves, piece, new Position(1,1));
 
+        this._bulkSetIsCheckingMove(possibleMoves);
+
         return possibleMoves;
     }
 
@@ -91,19 +126,22 @@ class MoveGenerator {
     }
 
     _createKnightMoves(piece){
-        return [
-            new Position(-1, 2),
-            new Position(1, 2),
+        let possibleMoves = [
+            new Move(piece, MoveType.DEFAULT, new Position(-1, 2)),
+            new Move(piece, MoveType.DEFAULT,new Position(1, 2)),
 
-            new Position(2, -1),
-            new Position(2, 1),
+            new Move(piece, MoveType.DEFAULT,new Position(2, -1)),
+            new Move(piece, MoveType.DEFAULT,new Position(2, 1)),
 
-            new Position(-1, -2),
-            new Position(1, -2),
+            new Move(piece, MoveType.DEFAULT,new Position(-1, -2)),
+            new Move(piece, MoveType.DEFAULT,new Position(1, -2)),
 
-            new Position(-2, 1),
-            new Position(-2, -1),
+            new Move(piece, MoveType.DEFAULT,new Position(-2, 1)),
+            new Move(piece, MoveType.DEFAULT,new Position(-2, -1)),
         ];
+
+        this._bulkSetIsCheckingMove(possibleMoves);
+        return possibleMoves;
     }
 
     _addMoveForEveryEmptyField(possibleMoves, piece, moveDirection){
@@ -115,14 +153,14 @@ class MoveGenerator {
             if(this._gameState.board.moveIsOutOfBounds(move)){
                 break;
             }
-            let field = this._gameState.board.getObjAtPosition(position);
+            let field = this._gameState.board.getObjAtPosition(move);
             if(field instanceof Piece){
                 if(piece.getPlayerType() !== field.getPlayerType()){
-                    possibleMoves.add(position);
+                    possibleMoves.push(new Move(piece,MoveType.DEFAULT, position));
                 }
                 break;
             }
-            possibleMoves.add(position);
+            possibleMoves.push(new Move(piece,MoveType.DEFAULT, position));
         }
     }
 
@@ -160,27 +198,31 @@ class MoveGenerator {
         return false;
     }
 
-    //TODO all of them...
-
-    _pawnCanEnPassantLeft(move, pawn){
-
+    _pawnCanEnPassant(pawn){
+        //IF THE last move was a pawn move of two squares and it is now on the same x as my pawn then yes..
+        //and it is an x distance of one..
+        return ((this._gameState.lastMoveMade.piece.getType() === PieceType.PAWN &&
+            this._gameState.lastMoveMade.piece.getPosition().y === pawn.getPosition().y &&
+            Math.abs(this._gameState.lastMoveMade.previousPosition.y - this._gameState.lastMoveMade.piece.getPosition().y) === 2) &&
+            Math.abs(this._gameState.lastMoveMade.piece.getPosition().x - pawn.getPosition().x) === 1);
     }
 
-    _pawnCanEnPassantRight(move, pawn){
-
-    }
-
-
-    _pawnCanBePromoted(pawn){
-
-    }
-
+    //TODO implement
     _queenSideCastlePossible(king){
 
     }
 
+    //TODO implement
     _kingSideCastlePossible(king){
 
     }
 
+    _bulkSetIsCheckingMove(moves){
+        moves.forEach(move => {
+            let opponentKing = this._gameState.checkingHandler.getOpponentKing();
+            if(move.newPosition.equals(opponentKing.getPosition())){
+                move.moveType = move.moveType | MoveType.CHECKING;
+            }
+        });
+    }
 }
