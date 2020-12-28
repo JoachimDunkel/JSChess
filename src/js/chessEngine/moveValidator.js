@@ -1,6 +1,26 @@
 class MoveValidator {
+
     constructor(gameState) {
         this._gameState = gameState;
+    }
+
+    moveLeadsToCheck(move, attackedPlayer){
+        let newGameState = _.cloneDeep(this._gameState);
+        newGameState.makeMove(move);
+        newGameState.setMyColor(attackedPlayer);
+        let opponentPieces = this._gameState.board.getAllPiecesOfPlayer(attackedPlayer);
+
+        let myKingPosition = this._gameState.checkingHandler.getMyKing().getPosition();
+        for (const opponentPiece of opponentPieces) {
+            let possibleMoves = new MoveGenerator(newGameState).generateMovesFor(opponentPiece);
+            let validMoves = this.moveIsValid(possibleMoves);
+            for (const validMove of validMoves) {
+                if(validMove.newPosition.equals(myKingPosition)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -16,61 +36,15 @@ class MoveValidator {
                 return false;
             }
         }
-        //if my own king is in check the move has to end the check otherwise not valid..
-        if(this._gameState.checkingHandler.iAmInCheck()){
-            //deep copy board.. fuck javascript //TODO probably not working like this..
-            let newGameState = _.cloneDeep(this._gameState);
-            newGameState.makeMove(move);
-
-            for (let checkingPiece in newGameState.checkingHandler.checkingPieces) {
-                let myKingPosition = newGameState.checkingHandler.getMyKing();
-                let movesOfCheckingPieces = new MoveGenerator(newGameState).generateMovesFor(checkingPiece);
-                movesOfCheckingPieces.forEach(move => {
-                    if(move === myKingPosition){
-                        return false;
-                    }
-                })
-            }
-        }
-
-        //if king move .. we need to know if any opponent piece attacks that field
-        if( move.moveType === MoveType.KING_MOVE){
-            //TODO not working yet..
-            //To get this to work we maybe have to always save every field attacked by every opponent piece..
-        }
         return true;
-    }
-
-    bulkSetIsCheckingMove(moves){
-        let opponentKing = this._gameState.checkingHandler.getOpponentKing();
-
-        for (let move of moves) {
-            if(move.moveType === MoveType.KING_MOVE){
-                continue;
-            }
-
-            //we have to copy the game state otherwise pieces block itself is blocked by itself..
-
-            let newGameState = _.cloneDeep(this._gameState);
-            //let newGameState = $.extend(true,this._gameState);
-
-            newGameState.makeMove(move);
-            //only works if the piece is updated.. on makeMove..
-            let possibleMovesOnNextRound = new MoveGenerator(newGameState).generateMovesFor(move.piece);
-
-            for (let possibleMove of possibleMovesOnNextRound) {
-                if(possibleMove.newPosition.equals(opponentKing.getPosition())){
-                    move.moveType = move.moveType | MoveType.CHECKING;
-                    break;
-                }
-            }
-        }
     }
 
     invalidateAllMoves(movesToValidate){
         let validMoves = [];
         movesToValidate.forEach(move => {
-            if(this.moveIsValid(move)) validMoves.push(move);
+            if(this.moveIsValid(move) && !this.moveLeadsToCheck(move, this._gameState.myColor)){
+                validMoves.push(move);
+            }
         })
         return validMoves;
     }

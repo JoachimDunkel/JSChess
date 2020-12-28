@@ -4,6 +4,7 @@ class Game {
     constructor(connectionHandler, myPlayerType) {
         this.connectionHandler = connectionHandler;
         this.gameState = new GameState();
+        this.gameState.setMyColor(this.connectionHandler.provideUserColorFromServer());
         this.gameState.fillBoardWithPieces();
         this.myPlayerType = myPlayerType;
     }
@@ -11,7 +12,7 @@ class Game {
     run(){
         while (BOOL.TRUE){
             if(this.gameState.currentPlayer === this.myPlayerType){
-                let move = new MoveHandler(this.gameState).askMoveFromUser();
+                let move = new MoveHandler(this.gameState).startTurnInteraction();
                 this.gameState.update(move);
                 // connectionHandler... send update over server..
             }

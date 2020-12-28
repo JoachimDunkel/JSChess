@@ -1,3 +1,23 @@
+function isValidOnRookCheckingScenario(myRookMoveDirection, gameState, moveValidator) {
+    let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(3,3), "irrelevant");
+    let myRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(1,1), "irrelevant");
+    let oppKing = new Piece(Player.BLACK, PieceType.KING, new Position(7,7), "irrelevant")
+    let myKing = new Piece(Player.WHITE, PieceType.KING, new Position(0,3), "irrelevant");
+
+
+    gameState.board.setPiece(oppRook);
+    gameState.board.setPiece(myRook);
+    gameState.board.setPiece(oppKing);
+    gameState.board.setPiece(myKing);
+
+    gameState.checkingHandler.setupKings(myKing,oppKing);
+    gameState.checkingHandler.whiteIsInCheck = true;
+    gameState.checkingHandler.checkingPieces.push(oppRook);
+
+    let rookMove = new Move(myRook, MoveType.DEFAULT, myRookMoveDirection);
+    return moveValidator.moveIsValid(rookMove);
+}
+
 describe("MoveValidator", () =>{
    let moveValidator;
    let gameState;
@@ -53,31 +73,16 @@ describe("MoveValidator", () =>{
         expect(result).toBeFalse();
     });
 
-    it('Bulk Sets is checking Move For Moves Looking at the king ', function () {
-        let rook = new Piece(Player.WHITE, PieceType.ROOK, new Position(3,3), "irrelevant");
-        let oppKing = new Piece(Player.BLACK, PieceType.KING, new Position(0,1), "irrelevant")
-        let myKing = new Piece(Player.WHITE, PieceType.KING, new Position(7,7), "irrelevant");
-
-        gameState.board.setPiece(rook);
-        gameState.board.setPiece(oppKing);
-        gameState.board.setPiece(myKing);
-
-        gameState.checkingHandler.setupKings(myKing,oppKing);
-
-        let possibleRookMoves = new MoveGenerator(gameState).generateMovesFor(rook);
-
-        let validMoves = moveValidator.invalidateAllMoves(possibleRookMoves);
-
-        moveValidator.bulkSetIsCheckingMove(validMoves);
-
-        expect(validMoves.length).toBe(14);
-
-        let numCheckingMoves = validMoves.filter((move) => (move.moveType & MoveType.CHECKING)).length;
-
-        expect(numCheckingMoves).toBe(2);
+    it('move is invalid If it does not end the check', () => {
+        let result = isValidOnRookCheckingScenario(new Position(1,0), gameState, moveValidator);
+        expect(result).toBeFalse();
     });
 
-    //TODO if I am in check...
+    it('move is valid If it ends the check', () => {
+        let result = isValidOnRookCheckingScenario(new Position(0,2), gameState, moveValidator);
+        expect(result).toBeTrue();
+    });
+
 
     //TODO if I make a king move...
 

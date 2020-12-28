@@ -7,4 +7,11 @@ class ConnectionHandler {
         console.log("Recivede opponent move.");
         return undefined;
     }
+
+    provideUserColorFromServer(){
+        //todo smart get from server
+
+        return Player.WHITE;
+    }
+
 }

@@ -21,27 +21,27 @@ class MoveGenerator {
     }
     _createKingMoves(piece){
         let possibleMoves = [
-            new Move(piece,MoveType.KING_MOVE, new Position(-1,1)),
-            new Move(piece,MoveType.KING_MOVE,new Position(-1,0)),
-            new Move(piece,MoveType.KING_MOVE,new Position(-1,-1)),
+            new Move(piece,MoveType.DEFAULT, new Position(-1,1)),
+            new Move(piece,MoveType.DEFAULT,new Position(-1,0)),
+            new Move(piece,MoveType.DEFAULT,new Position(-1,-1)),
 
-            new Move(piece,MoveType.KING_MOVE,new Position(0,1)),
-            new Move(piece,MoveType.KING_MOVE,new Position(0,-1)),
+            new Move(piece,MoveType.DEFAULT,new Position(0,1)),
+            new Move(piece,MoveType.DEFAULT,new Position(0,-1)),
 
-            new Move(piece,MoveType.KING_MOVE,new Position(1,1)),
-            new Move(piece,MoveType.KING_MOVE,new Position(1,0)),
-            new Move(piece,MoveType.KING_MOVE,new Position(1,-1)),
+            new Move(piece,MoveType.DEFAULT,new Position(1,1)),
+            new Move(piece,MoveType.DEFAULT,new Position(1,0)),
+            new Move(piece,MoveType.DEFAULT,new Position(1,-1)),
         ]
 
 
         //TODO implement both functions...
 
         if(this._queenSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.KING_MOVE, new Position(3,0)))
+            possibleMoves.add(new Move(piece, MoveType.DEFAULT, new Position(-3,0)))
         }
 
         if(this._kingSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.KING_MOVE, new Position(-2,0)))
+            possibleMoves.add(new Move(piece, MoveType.DEFAULT, new Position(2,0)))
         }
 
         return possibleMoves;
@@ -200,13 +200,19 @@ class MoveGenerator {
     }
 
     //TODO implement
-    _queenSideCastlePossible(king){
-
+    _queenSideCastlePossible(){
+        // -3/ 0
+        //if i have the rights to castle queenside
+        //if the way between king and rook is not blocked
+        //if the king is not in check or any move the king has to make while castling does not lead to check
     }
 
     //TODO implement
-    _kingSideCastlePossible(king){
-
+    _kingSideCastlePossible(){
+        // -2/ 0
+        //if i have the rights to castle kingside
+        //if the way between king and rook is not blocked
+        //if the king is not in check or any move the king has to make while castling does not lead to check
     }
 
 }

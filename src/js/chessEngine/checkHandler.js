@@ -1,9 +1,8 @@
 class CheckHandler {
-    constructor(myColor) {
-        this.myColor = myColor
+    constructor() {
+        this.myColor = null;
         this.whiteIsInCheck = false;
         this.blackIsInCheck = false;
-        this.checkingPieces = [];
     }
 
     setupKings(whiteKing, blackKing){
@@ -70,6 +69,10 @@ class CheckHandler {
 
     //TODO
     setIamOutOfCheck(){
+
+    }
+
+    setOpponentOufOfCheck(){
 
     }
 

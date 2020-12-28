@@ -11,9 +11,7 @@ class Board {
             this._board[i] = [];
             for(let j = 0; j < BoardSize; j++){
 
-                //TODO change with null;
-                //having multiple different object types is kinda dirty... maybe create field object that contains a piece or not..
-                this._board[i][j] = PieceType.NONE;
+                this._board[i][j] = null;
             }
         }
     }
@@ -45,7 +43,7 @@ class Board {
                 let toPrint = field;
                 let colorPrefix ="0";
 
-                if(field instanceof Piece){
+                if(field !== null){
                     toPrint = field.getType();
                     if(field.getPlayerType() === Player.WHITE){
                         colorPrefix = "w";
@@ -81,7 +79,21 @@ class Board {
     }
 
     clearField(piece){
-        this._board[piece.getPosition().x][piece.getPosition().y] = PieceType.NONE;
+        this._board[piece.getPosition().x][piece.getPosition().y] = null;
+    }
+
+    getAllPiecesOfPlayer(playerType){
+        let myPieces = [];
+
+        for(let i = 0; i < BoardSize; i++){
+            for(let j = 0; j < BoardSize; j++){
+                let piece = this.getObjAtPosition(new Position(i,j));
+                if(piece !== null && piece.getPlayerType() === playerType){
+                    myPieces.push(piece);
+                }
+            }
+        }
+        return myPieces;
     }
 }
 

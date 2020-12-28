@@ -31,9 +31,4 @@ class Piece {
         return new Piece(piece.getPlayerType(), piece.getType(), piece.getPosition(),  piece.getImageSource());
     }
 
-    static fromNewPosition(piece, newPosition){
-        let newPiece = this.copy(piece);
-        newPiece.setPosition(newPosition);
-        return newPiece;
-    }
 }
