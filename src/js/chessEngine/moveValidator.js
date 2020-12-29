@@ -23,7 +23,6 @@ class MoveValidator {
         return false;
     }
 
-
     moveIsValid(move){
         //Check if move is in bounds
         if(this._gameState.board.moveIsOutOfBounds(move.newPosition))

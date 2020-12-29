@@ -33,9 +33,6 @@ class MoveGenerator {
             new Move(piece,MoveType.DEFAULT,new Position(1,-1)),
         ]
 
-
-        //TODO implement both functions...
-
         if(this._queenSideCastlePossible(piece)){
             possibleMoves.add(new Move(piece, MoveType.DEFAULT, new Position(-3,0)))
         }
@@ -199,20 +196,40 @@ class MoveGenerator {
             Math.abs(this._gameState.lastMoveMade.piece.getPosition().x - pawn.getPosition().x) === 1);
     }
 
-    //TODO implement
     _queenSideCastlePossible(){
-        // -3/ 0
-        //if i have the rights to castle queenside
-        //if the way between king and rook is not blocked
-        //if the king is not in check or any move the king has to make while castling does not lead to check
+
+        if(!this._gameState.iHaveQueenSideCastlingRights()) return false;
+
+        let fieldsToBeConsidered = [new Position(-1,0), new Position(-2,0), new Position(-3,0)];
+        return this._checkCastlingPossible(fieldsToBeConsidered);
     }
 
-    //TODO implement
     _kingSideCastlePossible(){
-        // -2/ 0
-        //if i have the rights to castle kingside
-        //if the way between king and rook is not blocked
-        //if the king is not in check or any move the king has to make while castling does not lead to check
+
+        if(!this._gameState.iHaveKingSideCastlingRights()) return false;
+
+        let fieldsToBeConsidered = [new Position(1,0), new Position(2,0)];
+        return this._checkCastlingPossible(fieldsToBeConsidered);
+    }
+
+    _checkCastlingPossible(fieldsToBeConsidered){
+        let myKing = this._gameState.checkingHandler.getMyKing();
+
+        if(this._gameState.checkingHandler.iAmInCheck()) return false;
+
+        for (const field of fieldsToBeConsidered) {
+            let newPosition = myKing.getPosition().add(field);
+            let piece = this._gameState.board.getObjAtPosition(newPosition)
+            if(piece !== null){
+                return false;
+            }
+        }
+
+        let moveValidator = new MoveValidator(this._gameState);
+        for (const direction of fieldsToBeConsidered) {
+            let move = new Move(myKing,MoveType.DEFAULT, direction);
+            if( moveValidator.moveLeadsToCheck(move,this._gameState.myColor)) return false;
+        }
     }
 
 }

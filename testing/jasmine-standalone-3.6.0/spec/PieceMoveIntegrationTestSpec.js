@@ -7,7 +7,40 @@ describe("PieceMoveIntegrationTestSpec", () => {
         moveHandler = new MoveHandler(gameState);
     });
 
-    //TODO test move-handler here and all possible move for every piece with validation... ...
+
+    //========================
+    //Move handler tests
+
+    it('lookup move returns move if it is in list', function () {
+
+    });
+
+    it('generate all possible moves for player works', function () {
+
+    });
+
+    it('generates all valid moves for target piece', function () {
+
+    });
+
+    it('Create Bishop moves works', function () {
+
+    });
+
+    it('Create Rook moves works', function () {
+
+    });
+
+    it('Create pawn moves works..', function () {
+
+    });
+
+    it('Create king moves works', function () {
+
+    });
+
+    //================
+    //generate valid moves works..
 
     it('Knight moves are correct when in corner', () =>  {
         let knight = new Piece(Player.WHITE, PieceType.KNIGHT, new Position(0,0), "irrelevant");
@@ -54,6 +87,7 @@ describe("PieceMoveIntegrationTestSpec", () => {
         expect(result.length).toBe(1);
         expect(result).toContain(new Position(1,2));
     });
+
 
 
 });

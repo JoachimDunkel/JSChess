@@ -31,4 +31,13 @@ class Piece {
         return new Piece(piece.getPlayerType(), piece.getType(), piece.getPosition(),  piece.getImageSource());
     }
 
+    equals(piece){
+        if(this.getPlayerType() !== piece.getPlayerType()){
+            return false;
+        }
+        if(this.getType() !== piece.getType()){
+            return false;
+        }
+        return this.getPosition().equals(piece.getPosition());
+    }
 }

@@ -12,10 +12,9 @@ function isValidOnRookCheckingScenario(myRookMoveDirection, gameState, moveValid
 
     gameState.checkingHandler.setupKings(myKing,oppKing);
     gameState.checkingHandler.whiteIsInCheck = true;
-    gameState.checkingHandler.checkingPieces.push(oppRook);
 
     let rookMove = new Move(myRook, MoveType.DEFAULT, myRookMoveDirection);
-    return moveValidator.moveIsValid(rookMove);
+    return moveValidator.moveIsValid(rookMove) && !moveValidator.moveLeadsToCheck(rookMove);
 }
 
 describe("MoveValidator", () =>{
@@ -73,7 +72,7 @@ describe("MoveValidator", () =>{
         expect(result).toBeFalse();
     });
 
-    it('move is invalid If it does not end the check', () => {
+    it('move Is Invalid If it does not end the check', () => {
         let result = isValidOnRookCheckingScenario(new Position(1,0), gameState, moveValidator);
         expect(result).toBeFalse();
     });
@@ -83,7 +82,9 @@ describe("MoveValidator", () =>{
         expect(result).toBeTrue();
     });
 
+    it('Move is valid If I move the king out of harm', () => {
+    });
 
-    //TODO if I make a king move...
-
+    it('Move is invalid If I move the king into harm.', () => {
+    });
 });

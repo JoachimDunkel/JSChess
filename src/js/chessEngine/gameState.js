@@ -63,7 +63,22 @@ class GameState {
             this.fiftyMovesCounter = 0;
         }
 
+        this.updateCastlingRights(move);
 
+        this.makeMove(move);
+
+        //check if move leads to check.
+        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheck(move, this.opponenColor);
+        if(opponentNowInCheck){
+            this.checkingHandler.setOpponentInCheck();
+        }
+
+        this.lastMoveMade = move;
+        this.allMovesMade.push(move);
+    }
+
+    makeMove(move){
+        //TODO
         if(move.moveType === MoveType.EN_PASSANT){
             //delete the correct pawn...
         }
@@ -80,25 +95,54 @@ class GameState {
         else{
             this.board.makeMove(move);
         }
-
-        //check if move leads to check.
-        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheck(move, this.opponenColor);
-        if(opponentNowInCheck){
-            this.checkingHandler.setOpponentInCheck();
-        }
-
-        this.updateCastlingRights(move);
-
-        this.lastMoveMade = move;
-        this.allMovesMade.push(move);
     }
 
-    //TODO
     updateCastlingRights(move){
-        //if i have no castling rights skip
+        if(!this.iHaveKingSideCastlingRights() && !this.iHaveQueenSideCastlingRights()){
+            return;
+        }
+
+        let yPosition = 0;
+        let kingSideCastleFlag = CastlePermissions.WHITE_KING_SIDE;
+        let queenSideCastleFlag = CastlePermissions.WHITE_QUEEN_SIDE;
+        if(this.myColor === Player.BLACK) {
+            yPosition = 7;
+            kingSideCastleFlag = CastlePermissions.BLACK_KING_SIDE;
+            queenSideCastleFlag = CastlePermissions.BLACK_QUEEN_SIDE;
+        }
+
+        //if i move the kingside rook i loose king side castling
+        if(move.piece.equals(new Piece(this.myColor,PieceType.ROOK, new Position(7, yPosition)))){
+            this.castlePermissions = this.castlePermissions ^ kingSideCastleFlag;
+        }
 
         //if i moved the queensideRook I loose queenside castling
-        //if i move the kingside rook i loose king side castling
+        if(move.piece.equals(new Piece(this.myColor,PieceType.ROOK, new Position(0, yPosition)))){
+            this.castlePermissions = this.castlePermissions ^ queenSideCastleFlag;
+        }
+
         //if i move the king i loose both castling rights..
+        let bothCastlingRights = kingSideCastleFlag | queenSideCastleFlag;
+        if(move.piece.equals(new Piece(this.myColor, PieceType.KING, new Position(4, yPosition)))){
+            this.castlePermissions = this.castlePermissions ^ bothCastlingRights;
+        }
+    }
+
+    iHaveKingSideCastlingRights(){
+        let castlingRights = CastlePermissions.BLACK_KING_SIDE;
+        if(this.myColor === Player.WHITE){
+            castlingRights = CastlePermissions.WHITE_KING_SIDE;
+        }
+
+        return (this.castlePermissions & castlingRights) === castlingRights;
+    }
+
+    iHaveQueenSideCastlingRights(){
+        let castlingRights = CastlePermissions.BLACK_QUEEN_SIDE;
+        if(this.myColor === Player.WHITE){
+            castlingRights = CastlePermissions.WHITE_QUEEN_SIDE;
+        }
+
+        return (this.castlePermissions & castlingRights) === castlingRights;
     }
 }

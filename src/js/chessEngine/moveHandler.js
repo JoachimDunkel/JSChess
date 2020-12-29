@@ -13,6 +13,8 @@ class MoveHandler {
             this.startGameOverEvent(this._gameState.gameStatus);
         }
 
+        //TODO if fifty move rule game over draw...
+
         this.allPossiblesMovesForPlayer = this._generateAllPossibleMovesForPlayer(this._gameState.myColor);
 
         //game over

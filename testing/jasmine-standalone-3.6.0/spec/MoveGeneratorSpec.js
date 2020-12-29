@@ -42,6 +42,11 @@ describe("MoveGenerator", () => {
         let objects = new TestHelper().onlyRookAndPawnOnBoard();
         gameState.board = objects[2];
         let rook = objects[0];
+
+        gameState.board.clearField(rook);
+        rook.setPosition(new Position(1,0));
+
+        gameState.board.setPiece(rook);
         let expectedNumOfMoves = 1;
 
         let result = [];
@@ -53,6 +58,33 @@ describe("MoveGenerator", () => {
 
     //TODO add tests for every piece type..
 
+    it('pawn Can move TwoSquares Works Correctly', function () {
+
+    });
+
+    it('pawn can not move two squares if it is not in start position', function () {
+
+    });
+
+    it('pawn can take left works', function () {
+
+    });
+
+    it('pawn can take rights works', function () {
+
+    });
+
+    it('pawn can En Passant works', function () {
+
+    });
+
+    it('queen side CastlePossible works', function () {
+
+    });
+
+    it('king side castle possible works', function () {
+
+    });
 
     //test king side castle possible
     //test queenside castle possible
