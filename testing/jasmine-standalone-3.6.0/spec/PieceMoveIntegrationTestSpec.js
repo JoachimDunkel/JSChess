@@ -89,5 +89,32 @@ describe("PieceMoveIntegrationTestSpec", () => {
     });
 
 
+    it('pawn can take left after valid pawn opening..', function () {
+        gameState.setMyColor(Player.WHITE);
+        gameState.fillBoardWithPieces();
+
+        let pawn = gameState.board.getObjAtPosition(new Position(3,1));
+
+        let wMove = new Move(pawn,MoveType.DEFAULT,new Position(0,2));
+        gameState.update(wMove);
+
+        gameState.setMyColor(Player.BLACK);
+
+        let bPawn = gameState.board.getObjAtPosition(new Position(4,6));
+        let bMove = new Move(pawn,MoveType.DEFAULT,new Position(0,- 2));
+
+        gameState.update(bMove);
+
+        gameState.setMyColor(Player.WHITE);
+
+        let result = new MoveGenerator(gameState)._pawnCanTake(new Position(-1,1), pawn);
+
+        expect(result).toBeTrue();
+    });
+
+    it('EN Passant works in a real world scenario...', function () {
+
+    });
+
 
 });

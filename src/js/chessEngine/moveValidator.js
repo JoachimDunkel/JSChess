@@ -4,16 +4,22 @@ class MoveValidator {
         this._gameState = gameState;
     }
 
-    moveLeadsToCheck(move, attackedPlayer){
+    moveLeadsToCheckOn(move, thisPlayer){
         let newGameState = _.cloneDeep(this._gameState);
-        newGameState.makeMove(move);
-        newGameState.setMyColor(attackedPlayer);
-        let opponentPieces = this._gameState.board.getAllPiecesOfPlayer(attackedPlayer);
+        let moveCopy = _.cloneDeep(move);
 
-        let myKingPosition = this._gameState.checkingHandler.getMyKing().getPosition();
+        newGameState.setMyColor(moveCopy.piece.getPlayerType());
+        newGameState.makeMove(moveCopy);
+        newGameState.setMyColor(thisPlayer);
+        let opponentPieces = newGameState.board.getAllPiecesOfPlayer(newGameState.opponenColor);
+
+        let myKingPosition = newGameState.getMyKing().getPosition();
+        newGameState.setMyColor(newGameState.opponenColor);
         for (const opponentPiece of opponentPieces) {
-            let possibleMoves = new MoveGenerator(newGameState).generateMovesFor(opponentPiece);
-            let validMoves = this.moveIsValid(possibleMoves);
+            let moveGenerator = new MoveGenerator(newGameState);
+            moveGenerator.withCastleMoves = false;
+            let possibleMoves = moveGenerator.generateMovesFor(opponentPiece);
+            let validMoves = this.validateAllMoves(possibleMoves);
             for (const validMove of validMoves) {
                 if(validMove.newPosition.equals(myKingPosition)){
                     return true;
@@ -40,11 +46,35 @@ class MoveValidator {
 
     invalidateAllMoves(movesToValidate){
         let validMoves = [];
-        movesToValidate.forEach(move => {
-            if(this.moveIsValid(move) && !this.moveLeadsToCheck(move, this._gameState.myColor)){
+
+        for (const move of movesToValidate) {
+            if(this.moveIsValid(move) && !this.moveLeadsToCheckOn(move, this._gameState.myColor)){
                 validMoves.push(move);
             }
-        })
+        }
+        return validMoves;
+    }
+
+    validateAllMoves(movesToValidate){
+        let validMoves = [];
+
+        for (const move of movesToValidate) {
+            if(this.moveIsValid(move)){
+                validMoves.push(move);
+            }
+        }
+        return validMoves;
+
+    }
+
+    movesDoNotLeadToCheck(movesToValidate){
+        let validMoves = [];
+
+        for (const move of movesToValidate) {
+            if(!this.moveLeadsToCheckOn(move, this._gameState.myColor)){
+                validMoves.push(move);
+            }
+        }
         return validMoves;
     }
 }

@@ -4,6 +4,13 @@ class GameState {
         this.fiftyMovesCounter = 0;
         this.halfMoveCounter = 0;
 
+        this.whiteIsInCheck = false;
+        this.blackIsInCheck = false;
+
+        this.whiteKing = null;
+        this.blackKing = null;
+
+
         this.board = new Board();
 
         this.castlePermissions =
@@ -15,8 +22,6 @@ class GameState {
         this.lastMoveMade = null;
         this.allMovesMade = [];
 
-        this.checkingHandler = new CheckHandler();
-
         this.gameStatus = GameStatus.RUNNING;
     }
 
@@ -26,7 +31,6 @@ class GameState {
         if(this.myColor === Player.BLACK){
             this.opponenColor = Player.WHITE;
         }
-        this.checkingHandler.myColor = this.myColor;
     }
 
     fillBoardWithPieces(){
@@ -37,7 +41,7 @@ class GameState {
         this.whiteKing = whiteSet[4];
         this.blackKing = blackSet[4];
 
-        this.checkingHandler.setupKings(this.whiteKing, this.blackKing);
+        this.setupKings(this.whiteKing, this.blackKing);
 
         this.board.setPieces(whiteSet);
         this.board.setPieces(blackSet);
@@ -67,10 +71,10 @@ class GameState {
 
         this.makeMove(move);
 
-        //check if move leads to check.
-        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheck(move, this.opponenColor);
+        //check if move leads to check on opponent.
+        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheckOn(move, this.opponenColor);
         if(opponentNowInCheck){
-            this.checkingHandler.setOpponentInCheck();
+            this.setOpponentInCheck();
         }
 
         this.lastMoveMade = move;
@@ -78,9 +82,10 @@ class GameState {
     }
 
     makeMove(move){
-        //TODO
         if(move.moveType === MoveType.EN_PASSANT){
             //delete the correct pawn...
+            let lastMovedPiece = this.lastMoveMade.piece;
+            this.board.clearField(lastMovedPiece.getPosition());
         }
 
         else if(move.moveType === MoveType.PAWN_PROMOTION){
@@ -94,6 +99,16 @@ class GameState {
         }
         else{
             this.board.makeMove(move);
+        }
+
+        //update the king reference broken for some reason ??
+        if(move.piece.getType() === PieceType.KING){
+            if(move.piece.getPlayerType() === Player.WHITE){
+                this.whiteKing = move.piece;
+            }
+            else {
+                this.blackKing = move.piece;
+            }
         }
     }
 
@@ -144,5 +159,94 @@ class GameState {
         }
 
         return (this.castlePermissions & castlingRights) === castlingRights;
+    }
+
+    // deepClone(){
+    //     //This is necessary since the _.clone deep does not clone referenced objects
+    //     //Fuck javascript i guess...
+    //
+    //     let newGameState = _.cloneDeep(this);
+    //     //clone the board...
+    //
+    // }
+
+    setupKings(whiteKing, blackKing){
+        this.whiteKing = whiteKing;
+        this.blackKing = blackKing;
+    }
+
+    iAmInCheck(){
+        if(this.myColor === Player.WHITE && this.whiteIsInCheck){
+            return true;
+        }
+        else if(this.myColor === Player.BLACK && this.blackIsInCheck){
+            return true;
+        }
+        return false;
+    }
+
+    opponentInCheck(){
+        if(this.myColor === Player.WHITE && this.blackIsInCheck){
+            return true;
+        }
+        else if(this.myColor === Player.BLACK && this.whiteIsInCheck){
+            return true;
+        }
+        return false;
+    }
+
+    getMyKing(){
+        if(this.myColor === Player.WHITE){
+            return this.whiteKing;
+        }
+        else{
+            return this.blackKing;
+        }
+    }
+
+    getOpponentKing(){
+        if(this.myColor === Player.WHITE){
+            return this.blackKing;
+        }
+        else{
+            return this.whiteKing;
+        }
+
+    }
+
+    setOpponentInCheck(){
+        if(this.myColor === Player.WHITE){
+            this.blackIsInCheck = true;
+        }
+        else{
+            this.whiteIsInCheck = true;
+        }
+    }
+
+    setIamInCheck(){
+        if(this.myColor === Player.WHITE){
+            this.whiteIsInCheck = true;
+        }
+        else{
+            this.blackIsInCheck = true;
+        }
+    }
+
+    setIamOutOfCheck(){
+        if(this.myColor === Player.WHITE){
+            this.whiteIsInCheck = false;
+        }
+        else{
+            this.blackIsInCheck = false;
+        }
+    }
+
+    setOpponentOufOfCheck(){
+        if(this.myColor === Player.WHITE){
+            this.blackIsInCheck = false;
+        }
+        else{
+            this.whiteIsInCheck = false;
+        }
     }
 }

@@ -1,6 +1,9 @@
 class MoveGenerator {
     constructor(gameState) {
         this._gameState = gameState;
+
+        //when using the move-generator to see if some one is in check we do not want to consider castling...
+        this.withCastleMoves = true;
     }
 
     generateMovesFor(piece){
@@ -33,12 +36,17 @@ class MoveGenerator {
             new Move(piece,MoveType.DEFAULT,new Position(1,-1)),
         ]
 
+        //TODO usefull??
+        if(!this.withCastleMoves){
+            return possibleMoves;
+        }
+
         if(this._queenSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.DEFAULT, new Position(-3,0)))
+            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(-3,0)))
         }
 
         if(this._kingSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.DEFAULT, new Position(2,0)))
+            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(2,0)))
         }
 
         return possibleMoves;
@@ -60,12 +68,14 @@ class MoveGenerator {
             pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0,2*y)));
         }
 
-        if(this._pawnCanTakeLeft(piece)){
-            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(-1, y)));
+        let leftTake = new Position(-1,y);
+        if(this._pawnCanTake(leftTake, piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, leftTake));
         }
 
-        if(this._pawnCanTakeRight(piece)){
-            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(1, y)));
+        let rightTake = new Position(1,y);
+        if(this._pawnCanTake(rightTake, piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, rightTake));
         }
 
         if(this._pawnCanEnPassant(piece)){
@@ -79,7 +89,7 @@ class MoveGenerator {
 
         pawnMoves.forEach(move => {
            if(move.newPosition.y === promotion_row){
-               move.moveType = move.moveType | MoveType.PAWN_PROMOTION;
+               move.moveType = MoveType.PAWN_PROMOTION;
            }
         });
 
@@ -154,33 +164,20 @@ class MoveGenerator {
     }
 
     _pawnCanMoveTwoSquares(pawn){
-        let requiredXPositionForDoubleMove = 6;
+        let yPositionForDoubleMove = 6;
         if(pawn.getPlayerType() === Player.WHITE){
-            requiredXPositionForDoubleMove = 1;
+            yPositionForDoubleMove = 1;
         }
-        return (pawn.getPosition().x === requiredXPositionForDoubleMove);
+        return (pawn.getPosition().y === yPositionForDoubleMove);
     }
 
-    _pawnCanTakeLeft(pawn){
-        let reqForLeftTake = new Position(-1,-1);
-        if(pawn.getPlayerType() === Player.WHITE){
-            reqForLeftTake = new Position(-1,1)
+    _pawnCanTake(direction, pawn){
+        let resultingPosition = direction.add(pawn.getPosition());
+        if(this._gameState.board.moveIsOutOfBounds(resultingPosition)) {
+            return false;
         }
-        return this._pawnCanTake(reqForLeftTake, pawn)
-    }
-
-    _pawnCanTakeRight(pawn){
-        let reqForLeftTake = new Position(1,-1);
-        if(pawn.getPlayerType() === Player.WHITE){
-            reqForLeftTake = new Position(1,1)
-        }
-        return this._pawnCanTake(reqForLeftTake, pawn)
-    }
-
-    _pawnCanTake(move, pawn){
-        let resultingPosition = move.add(pawn.getPosition());
         let field = this._gameState.board.getObjAtPosition(resultingPosition);
-        if(field instanceof Piece){
+        if(field !== null){
             if(field.getPlayerType() !== pawn.getPlayerType())
                 return true;
         }
@@ -190,6 +187,10 @@ class MoveGenerator {
     _pawnCanEnPassant(pawn){
         //IF THE last move was a pawn move of two squares and it is now on the same x as my pawn then yes..
         //and it is an x distance of one..
+
+        //en passant not possible yet..
+        if(this._gameState.halfMoveCounter < 3) return false;
+
         return ((this._gameState.lastMoveMade.piece.getType() === PieceType.PAWN &&
             this._gameState.lastMoveMade.piece.getPosition().y === pawn.getPosition().y &&
             Math.abs(this._gameState.lastMoveMade.previousPosition.y - this._gameState.lastMoveMade.piece.getPosition().y) === 2) &&
@@ -213,9 +214,17 @@ class MoveGenerator {
     }
 
     _checkCastlingPossible(fieldsToBeConsidered){
-        let myKing = this._gameState.checkingHandler.getMyKing();
+        let myKing = this._gameState.getMyKing();
 
-        if(this._gameState.checkingHandler.iAmInCheck()) return false;
+        if(this._gameState.iAmInCheck()) return false;
+
+        //if there is no rook at the position with the same color, return false..
+        let rookPosition = myKing.getPosition().add(fieldsToBeConsidered[fieldsToBeConsidered.length -1]);
+        rookPosition = rookPosition.add(fieldsToBeConsidered[0]);
+        let field = this._gameState.board.getObjAtPosition(rookPosition);
+        if(field === null || field.getType() !== PieceType.ROOK || myKing.getPlayerType() !== field.getPlayerType()){
+            return false;
+        }
 
         for (const field of fieldsToBeConsidered) {
             let newPosition = myKing.getPosition().add(field);
@@ -228,8 +237,10 @@ class MoveGenerator {
         let moveValidator = new MoveValidator(this._gameState);
         for (const direction of fieldsToBeConsidered) {
             let move = new Move(myKing,MoveType.DEFAULT, direction);
-            if( moveValidator.moveLeadsToCheck(move,this._gameState.myColor)) return false;
+            if( moveValidator.moveLeadsToCheckOn(move,this._gameState.myColor)) return false;
         }
+
+        return true;
     }
 
 }

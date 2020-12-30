@@ -43,7 +43,7 @@ describe("MoveGenerator", () => {
         gameState.board = objects[2];
         let rook = objects[0];
 
-        gameState.board.clearField(rook);
+        gameState.board.clearField(rook.getPosition());
         rook.setPosition(new Position(1,0));
 
         gameState.board.setPiece(rook);
@@ -59,38 +59,138 @@ describe("MoveGenerator", () => {
     //TODO add tests for every piece type..
 
     it('pawn Can move TwoSquares Works Correctly', function () {
+        new TestHelper().createValidBoard(gameState);
+        let pawn = new Piece(Player.WHITE, PieceType.PAWN, new  Position(0,1), "");
+        let result = moveGenerator._pawnCanMoveTwoSquares(pawn);
+        expect(result).toBeTrue();
+    });
+
+    it('pawn Can move TwoSquares also works for black', function () {
+        new TestHelper().createValidBoard(gameState);
+        gameState.setMyColor(Player.BLACK);
+        let pawn = new Piece(Player.BLACK, PieceType.PAWN, new  Position(0,6), "");
+        let result = moveGenerator._pawnCanMoveTwoSquares(pawn);
+        expect(result).toBeTrue();
+    });
+
+    it('pawnsCanMoveTwoSquaresOnAnOfficialInitBoardState', function () {
+        gameState.setMyColor(Player.WHITE);
+        gameState.fillBoardWithPieces();
+
+        let pawn = gameState.board.getObjAtPosition(new Position(3,1));
+        let result = moveGenerator._pawnCanMoveTwoSquares(pawn);
+        expect(result).toBeTrue();
 
     });
 
     it('pawn can not move two squares if it is not in start position', function () {
+        new TestHelper().createValidBoard(gameState);
+        gameState.setMyColor(Player.BLACK);
+        let pawn = new Piece(Player.BLACK, PieceType.PAWN, new  Position(0,5), "");
+        let result = moveGenerator._pawnCanMoveTwoSquares(pawn);
+        expect(result).toBeFalse();
 
     });
 
     it('pawn can take left works', function () {
 
+        let pawns = new TestHelper().createPawnTakingScenario(gameState);
+
+        let takeLeft = new MoveGenerator(gameState)._pawnCanTake(new Position(-1, 1) ,pawns[0]);
+        expect(takeLeft).toBeTrue();
     });
 
     it('pawn can take rights works', function () {
+        let wPawn = new TestHelper().createPawnTakingScenario(gameState)[0];
+        let move = new Move(wPawn, MoveType.DEFAULT,new Position(-2,0))
+        gameState.board.makeMove(move);
 
+        let takeRight = new MoveGenerator(gameState)._pawnCanTake(new Position(1, 1) , wPawn);
+        expect(takeRight).toBeTrue();
+
+        let takeLeft = new MoveGenerator(gameState)._pawnCanTake(new Position(-1, 1) , wPawn);
+        expect(takeLeft).toBeFalse();
+    });
+
+    it('pawn can take also works for black', function () {
+        let pawns = new TestHelper().createPawnTakingScenario(gameState);
+
+        let result = new MoveGenerator(gameState)._pawnCanTake(new Position(1, -1) , pawns[1]);
+
+        expect(result).toBeTrue();
     });
 
     it('pawn can En Passant works', function () {
+        let wPawn = new TestHelper().createEnPassantScenario(gameState)[0];
+
+        let result = new MoveGenerator(gameState)._pawnCanEnPassant(wPawn);
+        expect(result).toBeTrue();
+    });
+
+    it('can not en passant if game just started', function () {
+        let wPawn = new TestHelper().createEnPassantScenario(gameState)[0];
+        gameState.halfMoveCounter = 2;
+
+        let result = new MoveGenerator(gameState)._pawnCanEnPassant(wPawn);
+        expect(result).toBeFalse();
 
     });
 
-    it('queen side CastlePossible works', function () {
 
+    //deep copy does not work with the king reference..
+    it('queen side CastlePossible works', function () {
+        new TestHelper().createValidBoard(gameState);
+        let result = new MoveGenerator(gameState)._queenSideCastlePossible();
+        expect(result).toBeTrue();
     });
 
     it('king side castle possible works', function () {
 
+        new TestHelper().createValidBoard(gameState);
+        let kSideRook = new Piece(Player.WHITE, PieceType.ROOK, new Position(7,0), "kSide rook");
+        gameState.board.setPiece(kSideRook);
+
+        let result = new MoveGenerator(gameState)._kingSideCastlePossible();
+        expect(result).toBeTrue();
     });
 
-    //test king side castle possible
-    //test queenside castle possible
-    //test pawncanEnpassant.
-    //test pawncantake right
-    //test pawncan take left..
-    //test pawn can move two squares..
+    it('castling not possible if king in check', function () {
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,0), "black kSide rook");
+        gameState.board.setPiece(oppRook);
 
+        let result = new MoveGenerator(gameState)._kingSideCastlePossible();
+        expect(result).toBeFalse();
+    });
+
+    it('castling not possible moves are blocked', function () {
+        new TestHelper().createValidBoard(gameState);
+        let knight = new Piece(Player.BLACK, PieceType.KNIGHT, new Position(1,0), "qSide Knight");
+        gameState.board.setPiece(knight);
+
+        let result = new MoveGenerator(gameState)._kingSideCastlePossible();
+        expect(result).toBeFalse();
+
+    });
+
+    it('castling not possible if no castlingPermissions exist', function () {
+        new TestHelper().createValidBoard(gameState);
+        gameState.castlePermissions = 0;
+        let result = new MoveGenerator(gameState)._queenSideCastlePossible();
+        expect(result).toBeFalse();
+    });
+
+    it('castling not possible if king would receive check along the way', function () {
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(2,7), "black kSide rook");
+        gameState.board.setPiece(oppRook);
+
+        let result = new MoveGenerator(gameState)._kingSideCastlePossible();
+        expect(result).toBeFalse();
+    });
+
+    //TODO
+    it('no pawn move is created if the pawn is blocked...', function () {
+
+    });
 });

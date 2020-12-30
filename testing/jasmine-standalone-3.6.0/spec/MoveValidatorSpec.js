@@ -1,21 +1,4 @@
-function isValidOnRookCheckingScenario(myRookMoveDirection, gameState, moveValidator) {
-    let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(3,3), "irrelevant");
-    let myRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(1,1), "irrelevant");
-    let oppKing = new Piece(Player.BLACK, PieceType.KING, new Position(7,7), "irrelevant")
-    let myKing = new Piece(Player.WHITE, PieceType.KING, new Position(0,3), "irrelevant");
 
-
-    gameState.board.setPiece(oppRook);
-    gameState.board.setPiece(myRook);
-    gameState.board.setPiece(oppKing);
-    gameState.board.setPiece(myKing);
-
-    gameState.checkingHandler.setupKings(myKing,oppKing);
-    gameState.checkingHandler.whiteIsInCheck = true;
-
-    let rookMove = new Move(myRook, MoveType.DEFAULT, myRookMoveDirection);
-    return moveValidator.moveIsValid(rookMove) && !moveValidator.moveLeadsToCheck(rookMove);
-}
 
 describe("MoveValidator", () =>{
    let moveValidator;
@@ -44,6 +27,7 @@ describe("MoveValidator", () =>{
     });
 
     it('InvalidateAllMoves Filters out invalid Moves', () => {
+        new TestHelper().createValidBoard(gameState);
         let rook = new Piece(Player.WHITE, PieceType.ROOK, new Position(3,3), "irrelevant");
         gameState.board.setPiece(rook);
 
@@ -73,18 +57,108 @@ describe("MoveValidator", () =>{
     });
 
     it('move Is Invalid If it does not end the check', () => {
-        let result = isValidOnRookCheckingScenario(new Position(1,0), gameState, moveValidator);
-        expect(result).toBeFalse();
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,0), "bQSide Rook");
+        gameState.board.setPiece(oppRook);
+
+        let myBishop = new Piece(Player.WHITE, PieceType.BISHOP, new Position(5,1), "wBishop");
+        gameState.board.setPiece(myBishop);
+        let invalidMove = new Move(myBishop, MoveType.DEFAULT, new Position(1,1));
+
+        let leadsToCheck = moveValidator.moveLeadsToCheckOn(invalidMove,gameState.myColor);
+        expect(leadsToCheck).toBeTrue();
     });
 
     it('move is valid If it ends the check', () => {
-        let result = isValidOnRookCheckingScenario(new Position(0,2), gameState, moveValidator);
-        expect(result).toBeTrue();
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,0), "bQSide Rook");
+        gameState.board.setPiece(oppRook);
+
+        let myBishop = new Piece(Player.WHITE, PieceType.BISHOP, new Position(5,1), "wBishop");
+        gameState.board.setPiece(myBishop);
+        let validMove = new Move(myBishop, MoveType.DEFAULT, new Position(1,-1));
+
+        let leadsToCheck = moveValidator.moveLeadsToCheckOn(validMove,gameState.myColor);
+        expect(leadsToCheck).toBeFalse();
     });
 
     it('Move is valid If I move the king out of harm', () => {
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,0), "bQSide Rook");
+        gameState.board.setPiece(oppRook);
+
+        let myKing = gameState.getMyKing();
+        let move = new Move(myKing, MoveType.DEFAULT, new Position(0,1));
+        expect(moveValidator.moveLeadsToCheckOn(move, gameState.myColor)).toBeFalse();
     });
 
     it('Move is invalid If I move the king into harm.', () => {
+        new TestHelper().createValidBoard(gameState);
+        let oppRook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,0), "bQSide Rook");
+        gameState.board.setPiece(oppRook);
+
+        let myKing = gameState.getMyKing();
+        let move = new Move(myKing, MoveType.DEFAULT, new Position(-1,0));
+
+        expect(moveValidator.moveLeadsToCheckOn(move, gameState.myColor)).toBeTrue();
+    });
+
+    it('move leads to check on opponent', function () {
+        new TestHelper().createValidBoard(gameState);
+        let rook = gameState.board.getObjAtPosition(new Position(0,0));
+
+        let move = new Move(rook, MoveType.DEFAULT, new Position(0,7));
+
+        let moveLeadsToCheck = moveValidator.moveLeadsToCheckOn(move, gameState.opponenColor);
+
+        expect(moveLeadsToCheck).toBeTrue();
+    });
+
+    it('move leads to check returns true if i move my king into harm', function () {
+        new TestHelper().createValidBoard(gameState);
+        let rook = new Piece(Player.BLACK, PieceType.ROOK, new Position(7,1), "bQSide Rook");
+        gameState.board.setPiece(rook);
+
+        let move = new Move(gameState.getMyKing(), MoveType.DEFAULT, new Position(0,1));
+
+        let moveLeadsToCheck = moveValidator.moveLeadsToCheckOn(move, gameState.myColor);
+        expect(moveLeadsToCheck).toBeTrue();
+    });
+
+    it('changing a deep copy version of a game state does not affect the original', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let newGameState = _.cloneDeep(gameState);
+        newGameState.fiftyMovesCounter = 123;
+
+        expect(gameState.fiftyMovesCounter).toBe(0);
+    });
+
+    it('changing a piece of a deep copy game state does not affect the original', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let newGameState = _.cloneDeep(gameState);
+        let rook = newGameState.board.getObjAtPosition(new Position(0,0));
+        let move = new Move(rook, MoveType.DEFAULT, new Position(2,0));
+        newGameState.update(move);
+
+        let newRook = newGameState.board.getObjAtPosition(new Position(2,0));
+        let oldRook = gameState.board.getObjAtPosition(new Position(0,0));
+        expect(newRook.getType() === PieceType.ROOK).toBeTrue();
+        expect(oldRook.getType() === PieceType.ROOK).toBeTrue();
+        expect(oldRook.getPosition().equals(new Position(0,0)));
+
+    });
+
+    it('changing the king position in a deep copied game state does not effect the original', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let newGameState = _.cloneDeep(gameState);
+        let king = newGameState.board.getObjAtPosition(new Position(4,0));
+        let move = new Move(king, MoveType.DEFAULT, new Position(1,0));
+        newGameState.update(move);
+
+        expect(newGameState.getMyKing().getPosition().equals(new Position(5,0))).toBeTrue();
+        expect(gameState.getMyKing().getPosition().equals(new Position(4,0))).toBeTrue();
     });
 });

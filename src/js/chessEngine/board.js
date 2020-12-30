@@ -66,9 +66,9 @@ class Board {
 
     makeMove(move){
         let piece = move.piece;
-        this.clearField(piece);
+        this.clearField(move.previousPosition);
         piece.setPosition(move.newPosition);
-        this.clearField(piece);
+        this.clearField(move.newPosition);
         this.setPiece(piece);
     }
 
@@ -78,8 +78,8 @@ class Board {
         //and makeMove(king)
     }
 
-    clearField(piece){
-        this._board[piece.getPosition().x][piece.getPosition().y] = null;
+    clearField(position){
+        this._board[position.x][position.y] = null;
     }
 
     getAllPiecesOfPlayer(playerType){

@@ -19,7 +19,7 @@ class MoveHandler {
 
         //game over
         if(this.allPossiblesMovesForPlayer.length === 0){
-            if(this._gameState.checkingHandler.iAmInCheck()){
+            if(this._gameState.iAmInCheck()){
                 this._gameState.gameStatus = GameStatus.LOST;
             }
             else{
