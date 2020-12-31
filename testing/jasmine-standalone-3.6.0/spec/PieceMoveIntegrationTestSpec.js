@@ -238,8 +238,6 @@ describe("PieceMoveIntegrationTestSpec", () => {
         let qf3Tof7MATE = new Move(Qf3, MoveType.DEFAULT,new Position(0,4));
         gameState.update(qf3Tof7MATE);
 
-        gameState.board.printBoard();
-
         spyOn(moveHandler, 'startGameOverEvent');
 
         gameState.setMyColor(Player.BLACK);
@@ -255,4 +253,117 @@ describe("PieceMoveIntegrationTestSpec", () => {
         expect(pos.equals(fromNumbering)).toBeTrue();
     });
 
+    it('Performs queen-side castling', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let myKing = gameState.getMyKing();
+
+        let queenSideCastle = new Move(myKing, MoveType.CASTLE, new Position(-2,0));
+        gameState.update(queenSideCastle);
+
+        let rook = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.D,1));
+        let king = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.C,1));
+
+        expect(rook !== null).toBeTrue();
+        expect(king !== null).toBeTrue();
+
+        let kingIsInRightPosition = myKing.getPosition().equals(Position.fromChessNumbering(FILE.C,1));
+        expect(kingIsInRightPosition).toBeTrue();
+        expect(gameState.board.getObjAtPosition(new Position(0,0)) === null).toBeTrue();
+    });
+
+    it('Performs king_side castling', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let myKing = gameState.getMyKing();
+
+        let kSideRook = new Piece(Player.WHITE, PieceType.ROOK, new Position(7,0),"wQSRook");
+
+        gameState.board.setPiece(kSideRook);
+        let kingSideCastle = new Move(myKing, MoveType.CASTLE, new Position(2,0));
+        gameState.update(kingSideCastle);
+
+        let rook = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.F,1));
+        let king = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.G,1));
+
+        expect(rook !== null).toBeTrue();
+        expect(king !== null).toBeTrue();
+
+        let kingIsInRightPosition = myKing.getPosition().equals(Position.fromChessNumbering(FILE.G,1));
+        expect(kingIsInRightPosition).toBeTrue();
+        expect(gameState.board.getObjAtPosition(new Position(7,0)) === null).toBeTrue();
+    });
+
+    it('move getRookForCastling works as expected on queen-side', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let myKing = gameState.getMyKing();
+
+        let queenSideCastle = new Move(myKing, MoveType.CASTLE, new Position(-2,0));
+        let rookMove = queenSideCastle.getRookMoveForCastling(gameState.board);
+
+        expect(rookMove !== null).toBeTrue();
+        expect(rookMove.newPosition.equals(new Position(3,0))).toBeTrue();
+    });
+
+    it('Castling queen-side leads to check on opponent if his king is on D8', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        gameState.setMyColor(Player.BLACK);
+        let bKing = gameState.getMyKing();
+        let move = new Move(bKing, MoveType.DEFAULT, new Position(-1,0));
+        gameState.update(move);
+
+        expect(gameState.iAmInCheck()).toBeFalse();
+
+        gameState.setMyColor(Player.WHITE);
+        let wKing = gameState.getMyKing();
+
+        let queenSideCastle = new Move(wKing, MoveType.CASTLE, new Position(-2,0));
+        gameState.update(queenSideCastle);
+
+        expect(gameState.blackIsInCheck).toBeTrue();
+        expect(gameState.iAmInCheck()).toBeFalse();
+        expect(gameState.opponentInCheck()).toBeTrue();
+    });
+
+    it('move getRookForCastling works as expected on king-side', function () {
+        new TestHelper().createValidBoard(gameState);
+
+        let myKing = gameState.getMyKing();
+        let kSideRook = new Piece(Player.WHITE, PieceType.ROOK,new Position(7,0));
+        gameState.board.setPiece(kSideRook);
+
+        let kSideCastle = new Move(myKing, MoveType.CASTLE, new Position(2,0));
+        let rookMove = kSideCastle.getRookMoveForCastling(gameState.board);
+
+        expect(rookMove !== null).toBeTrue();
+        expect(rookMove.newPosition.equals(new Position(5,0))).toBeTrue();
+
+    });
+
+    it('i am out of check if i move out of check', function () {
+
+        new TestHelper().createValidBoard(gameState);
+
+        gameState.setMyColor(Player.BLACK);
+        let bKing = gameState.getMyKing();
+        let move = new Move(bKing, MoveType.DEFAULT, new Position(-1,0));
+        gameState.update(move);
+
+        gameState.setMyColor(Player.WHITE);
+        let wKing = gameState.getMyKing();
+
+        let queenSideCastle = new Move(wKing, MoveType.CASTLE, new Position(-2,0));
+        gameState.update(queenSideCastle);
+
+        gameState.setMyColor(Player.BLACK);
+        let blackKing = gameState.getMyKing();
+        let outOfCheck = new Move(blackKing,MoveType.DEFAULT, new Position(-1,0));
+
+        gameState.update(outOfCheck);
+
+        expect(gameState.iAmInCheck()).toBeFalse();
+        expect(gameState.castlePermissions).toBe(0);
+    });
 });

@@ -36,13 +36,12 @@ class MoveGenerator {
             new Move(piece,MoveType.DEFAULT,new Position(1,-1)),
         ]
 
-        //TODO usefull??
         if(!this.withCastleMoves){
             return possibleMoves;
         }
 
         if(this._queenSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(-3,0)))
+            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(-2,0)))
         }
 
         if(this._kingSideCastlePossible(piece)){
@@ -147,7 +146,7 @@ class MoveGenerator {
     }
 
     _addMoveForEveryEmptyField(possibleMoves, piece, moveDirection){
-        for (let i = 1; i < BoardSize -1; i++) {
+        for (let i = 1; i < BoardSize; i++) {
             //füge solange hinzu bis ein piece am board ist, falls es opponent piece ist dann füge das auch hinzu
             let position = moveDirection.multiply(new Position(i,i));
 

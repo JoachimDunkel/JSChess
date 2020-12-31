@@ -50,6 +50,8 @@ class GameState {
     }
 
     update(move){
+        //i am not in check anymore after a move otherwise the move shouldn't have been possible
+        this.setIamOutOfCheck();
 
         //always add a half move.. add a full move every time white is on the move...
         this.halfMoveCounter += 1;
@@ -62,6 +64,14 @@ class GameState {
             this.fiftyMovesCounter = 0;
         }
 
+        //check if move leads to check on opponent.
+        this.invalidateOpponentInCheck(move);
+
+        //if we made a castling move we have to consider the new rook position aswell
+        if (move.moveType === MoveType.CASTLE){
+            this.invalidateOpponentInCheck(move.getRookMoveForCastling(this.board));
+        }
+
         let field = this.board.getObjAtPosition(move.newPosition);
         if(field !== null && field.getPlayerType() === this.opponenColor){
             this.fiftyMovesCounter = 0;
@@ -71,14 +81,15 @@ class GameState {
 
         this.makeMove(move);
 
-        //check if move leads to check on opponent.
+        this.lastMoveMade = move;
+        this.allMovesMade.push(move);
+    }
+
+    invalidateOpponentInCheck(move){
         let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheckOn(move, this.opponenColor);
         if(opponentNowInCheck){
             this.setOpponentInCheck();
         }
-
-        this.lastMoveMade = move;
-        this.allMovesMade.push(move);
     }
 
     makeMove(move){
@@ -161,15 +172,6 @@ class GameState {
         return (this.castlePermissions & castlingRights) === castlingRights;
     }
 
-    // deepClone(){
-    //     //This is necessary since the _.clone deep does not clone referenced objects
-    //     //Fuck javascript i guess...
-    //
-    //     let newGameState = _.cloneDeep(this);
-    //     //clone the board...
-    //
-    // }
-
     setupKings(whiteKing, blackKing){
         this.whiteKing = whiteKing;
         this.blackKing = blackKing;
@@ -223,14 +225,6 @@ class GameState {
         }
     }
 
-    setIamInCheck(){
-        if(this.myColor === Player.WHITE){
-            this.whiteIsInCheck = true;
-        }
-        else{
-            this.blackIsInCheck = true;
-        }
-    }
 
     setIamOutOfCheck(){
         if(this.myColor === Player.WHITE){
@@ -240,6 +234,17 @@ class GameState {
             this.blackIsInCheck = false;
         }
     }
+
+    //TODO delete this two maybe if we do not need them at all..
+    setIamInCheck(){
+        if(this.myColor === Player.WHITE){
+            this.whiteIsInCheck = true;
+        }
+        else{
+            this.blackIsInCheck = true;
+        }
+    }
+
 
     setOpponentOufOfCheck(){
         if(this.myColor === Player.WHITE){

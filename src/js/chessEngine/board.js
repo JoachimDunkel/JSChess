@@ -32,6 +32,8 @@ class Board {
     //movePiece ?
     //helper function delete later..
 
+    //feel free to change it and make it so the pieces are printed in a good way.
+
     printBoard(){
         console.log("Current Board is: ");
         console.log("==========================================");
@@ -73,9 +75,10 @@ class Board {
     }
 
     makeCastle(move){
-        //find out the correct rook.
-        //then makeMove(rook)
-        //and makeMove(king)
+        let rookMove = move.getRookMoveForCastling(this);
+        this.makeMove(move);
+        if(rookMove === null) return;
+        this.makeMove(rookMove);
     }
 
     clearField(position){
