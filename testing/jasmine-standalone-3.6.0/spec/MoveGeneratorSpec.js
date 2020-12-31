@@ -189,8 +189,30 @@ describe("MoveGenerator", () => {
         expect(result).toBeFalse();
     });
 
-    //TODO
-    it('no pawn move is created if the pawn is blocked...', function () {
+    it('pawnCanMoveOneSquareWhen Not Blocked', function (){
+        new TestHelper().createValidBoard(gameState);
+        let e4Pawn = new Piece(Player.WHITE, PieceType.PAWN, Position.fromChessNumbering(FILE.E,4), "wE4Pawn");
+        let e6Pawn = new Piece(Player.BLACK, PieceType.PAWN, Position.fromChessNumbering(FILE.E,6), "be6Pawn");
+        gameState.board.setPiece(e4Pawn);
+        gameState.board.setPiece(e6Pawn);
+
+        let canMove = new MoveGenerator(gameState)._pawnCanMoveOneSquare(e4Pawn);
+
+        expect(canMove).toBeTrue();
+    });
+
+    it('pawn can not move if blocked by opponent piece', function () {
+        new TestHelper().createValidBoard(gameState);
+        let e4Pawn = new Piece(Player.WHITE, PieceType.PAWN, Position.fromChessNumbering(FILE.E,4), "wE4Pawn");
+        let e5Pawn = new Piece(Player.BLACK, PieceType.PAWN, Position.fromChessNumbering(FILE.E,5), "be5Pawn");
+        gameState.board.setPiece(e4Pawn);
+        gameState.board.setPiece(e5Pawn);
+
+        let canMove = new MoveGenerator(gameState)._pawnCanMoveOneSquare(e4Pawn);
+
+        expect(canMove).toBeFalse();
 
     });
+
+
 });

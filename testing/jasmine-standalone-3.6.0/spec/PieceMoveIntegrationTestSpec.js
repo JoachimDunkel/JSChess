@@ -9,7 +9,7 @@ describe("PieceMoveIntegrationTestSpec", () => {
 
 
     //========================
-    //Move handler tests
+    //Move handler tests, needs some integration testing if the structure should change for now..
 
     it('lookup move returns move if it is in list', function () {
         
@@ -23,6 +23,25 @@ describe("PieceMoveIntegrationTestSpec", () => {
     it('generates all valid moves for target piece', function () {
 
     });
+
+    it('is a draw on fifty moves rule', function () {
+
+    });
+
+    //both should be working..
+    //check mate
+    it('the game is lost if active player cant make any more moves and is in check', function () {
+
+    });
+
+    //stale mate...
+    it('the game is a draw if active player cant make any moves and is not in check', function () {
+
+    });
+
+
+    //================
+    //generate valid moves works..  should be working... to lazy atm
 
     it('Create Bishop moves works', function () {
 
@@ -40,10 +59,10 @@ describe("PieceMoveIntegrationTestSpec", () => {
 
     });
 
-    //================
-    //generate valid moves works..
 
     it('Knight moves are correct when in corner', () =>  {
+        new TestHelper().createValidBoard(gameState);
+
         let knight = new Piece(Player.WHITE, PieceType.KNIGHT, new Position(0,0), "irrelevant");
         gameState.board.setPiece(knight);
 
@@ -51,11 +70,13 @@ describe("PieceMoveIntegrationTestSpec", () => {
         let result = moveHandler.moveValidator.invalidateAllMoves(moves);
 
         expect(result.length).toBe(2);
-        expect(result).toContain(new Position(2,1));
-        expect(result).toContain(new Position(1,2));
+        expect(result[0].newPosition.equals(new Position(1,2))).toBeTrue();
+        expect(result[1].newPosition.equals(new Position(2,1))).toBeTrue();
     });
 
     it('Knight moves are correct when in the middle of the board', () =>  {
+        new TestHelper().createValidBoard(gameState);
+
         let knight = new Piece(Player.WHITE, PieceType.KNIGHT, new Position(3,3), "irrelevant");
         gameState.board.setPiece(knight);
 
@@ -64,18 +85,20 @@ describe("PieceMoveIntegrationTestSpec", () => {
 
         expect(result.length).toBe(8);
 
-        expect(result).toContain(new Position(1,2));
-        expect(result).toContain(new Position(1,4));
-        expect(result).toContain(new Position(2,5));
-        expect(result).toContain(new Position(4,5));
+        expect(result[0].newPosition.equals(new Position(2,5)));
+        expect(result[1].newPosition.equals(new Position(4,5)));
+        expect(result[2].newPosition.equals(new Position(5,2)));
+        expect(result[3].newPosition.equals(new Position(5,4)));
 
-        expect(result).toContain(new Position(5,4));
-        expect(result).toContain(new Position(5,2));
-        expect(result).toContain(new Position(4,1));
-        expect(result).toContain(new Position(2,1));
+        expect(result[4].newPosition.equals(new Position(2,1)));
+        expect(result[5].newPosition.equals(new Position(4,1)));
+        expect(result[6].newPosition.equals(new Position(1,4)));
+        expect(result[7].newPosition.equals(new Position(1,2)));
     });
 
     it('Knight moves are correct if own piece blocks the way', () =>  {
+        new TestHelper().createValidBoard(gameState);
+
         let knight = new Piece(Player.WHITE, PieceType.KNIGHT, new Position(0,0), "irrelevant");
         let ownPawn = new Piece(Player.WHITE, PieceType.PAWN, new Position(2,1), "irrelevant");
         gameState.board.setPiece(knight);
@@ -86,11 +109,11 @@ describe("PieceMoveIntegrationTestSpec", () => {
 
 
         expect(result.length).toBe(1);
-        expect(result).toContain(new Position(1,2));
+        expect(result[0].newPosition.equals(new Position(1,2)));
     });
 
 
-    it('pawn can take left after valid pawn opening..', function () {
+    it('pawn can take right after valid pawn opening..', function () {
         gameState.setMyColor(Player.WHITE);
         gameState.fillBoardWithPieces();
 
@@ -102,28 +125,72 @@ describe("PieceMoveIntegrationTestSpec", () => {
         gameState.setMyColor(Player.BLACK);
 
         let bPawn = gameState.board.getObjAtPosition(new Position(4,6));
-        let bMove = new Move(pawn,MoveType.DEFAULT,new Position(0,- 2));
+        let bMove = new Move(bPawn,MoveType.DEFAULT,new Position(0,- 2));
 
         gameState.update(bMove);
 
         gameState.setMyColor(Player.WHITE);
 
-        let result = new MoveGenerator(gameState)._pawnCanTake(new Position(-1,1), pawn);
+        let result = new MoveGenerator(gameState)._pawnCanTake(new Position(1,1), pawn);
 
         expect(result).toBeTrue();
     });
 
-    it('EN Passant works in a real world scenario...', function () {
-
-    });
-
-
     it('Pawns can not take straight', function () {
+        gameState.setMyColor(Player.WHITE);
+        gameState.fillBoardWithPieces();
 
+        //e2 -> e4
+        let e2Pawn = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.E, 2));
+        let e2Toe4  = new Move(e2Pawn, MoveType.DEFAULT,new Position(0,2));
+        gameState.update(e2Toe4);
+
+        //e7 -> e5
+        gameState.setMyColor(Player.BLACK);
+        let e7Pawn = gameState.board.getObjAtPosition(Position.fromChessNumbering(FILE.E, 7));
+        let e7Toe5  = new Move(e7Pawn, MoveType.DEFAULT,new Position(0,-2));
+        gameState.update(e7Toe5);
+
+        gameState.setMyColor(Player.WHITE);
+        let possibleMovesOfe4Pawn = moveHandler.moveGenerator.generateMovesFor(e2Pawn);
+        expect(possibleMovesOfe4Pawn.length).toBe(0);
     });
 
     it('King is not in check if it blocks opposing pawn..', function () {
+        new TestHelper().createValidBoard(gameState);
+        let pawn = new Piece(Player.WHITE,PieceType.PAWN,Position.fromChessNumbering(FILE.E, 6), "wE6Pawn");
+        gameState.board.setPiece(pawn);
 
+        let move = new Move(pawn, MoveType.DEFAULT, new Position(0,1));
+
+        gameState.update(move);
+        expect(gameState.blackIsInCheck).toBe(false);
+    });
+
+    it('King can block pawn from promoting..', function () {
+        new TestHelper().createValidBoard(gameState);
+        let pawn = new Piece(Player.WHITE,PieceType.PAWN,Position.fromChessNumbering(FILE.D, 7), "wE7Pawn");
+        gameState.board.setPiece(pawn);
+
+        gameState.setMyColor(Player.BLACK);
+        let blackKing = gameState.getMyKing();
+
+
+        let move = new Move(blackKing, MoveType.DEFAULT, new Position(-1,0));
+
+        let moveLeadsToCheck = new MoveValidator(gameState).moveLeadsToCheckOn(move, Player.BLACK);
+        expect(moveLeadsToCheck).toBeFalse();
+
+        let possibleKingMoves = new MoveGenerator(gameState).generateMovesFor(blackKing);
+
+        let containsKEToD8 = false;
+        for (const kingMove of possibleKingMoves) {
+            if(kingMove.newPosition.equals(Position.fromChessNumbering(FILE.D, 8))){
+                containsKEToD8 = true;
+            }
+        }
+
+        expect(containsKEToD8).toBeTrue();
     });
 
     it('farmers mate possible...', function () {

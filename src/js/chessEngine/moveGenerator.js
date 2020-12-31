@@ -61,11 +61,12 @@ class MoveGenerator {
             promotion_row = 0;
         }
 
-        //TODO not correct.. pawn can only advance if no piece infront of him of any color...
+        let pawnMoves = [];
 
-        let pawnMoves = [
-            new Move(piece, MoveType.DEFAULT, new Position(0, y)),
-        ]
+        if(this._pawnCanMoveOneSquare(piece)){
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0, y)));
+        }
+
         if(this._pawnCanMoveTwoSquares(piece)){
             pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0,2*y)));
         }
@@ -171,6 +172,17 @@ class MoveGenerator {
             yPositionForDoubleMove = 1;
         }
         return (pawn.getPosition().y === yPositionForDoubleMove);
+    }
+
+    _pawnCanMoveOneSquare(pawn){
+        //if an object is in-front of it, it can not move...
+        let yDirection = 1;
+        if(this._gameState.myColor === Player.BLACK){
+            yDirection = - 1;
+        }
+        let newPosition = pawn.getPosition().add(new Position(0, yDirection));
+        let field = this._gameState.board.getObjAtPosition(newPosition);
+        return field === null;
     }
 
     _pawnCanTake(direction, pawn){

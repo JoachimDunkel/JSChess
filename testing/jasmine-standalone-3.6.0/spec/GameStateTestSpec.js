@@ -192,8 +192,8 @@ describe("Game state", () =>{
         gameState.update(move);
 
         let piece = gameState.board.getObjAtPosition(move.newPosition);
-        expect(piece.getType() === PieceType.QUEEN);
-        expect(gameState.opponentInCheck());
+        expect(piece.getType() === PieceType.QUEEN).toBeTrue();
+        expect(gameState.opponentInCheck()).toBeTrue();
 
     });
 
@@ -214,7 +214,6 @@ describe("Game state", () =>{
         let move = new Move(rook, MoveType.DEFAULT, new Position(0,7));
         gameState.update(move);
 
-        expect(rook.getPosition().equals(move.newPosition));
+        expect(rook.getPosition().equals(move.newPosition)).toBeTrue();
     });
-
 });
