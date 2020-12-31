@@ -10,8 +10,8 @@ class Board {
         for(let i = 0; i < BoardSize; i++){
             this._board[i] = [];
             for(let j = 0; j < BoardSize; j++){
-                //having multiple different object types is kinda dirty... maybe create field object that contains a piece or not..
-                this._board[i][j] = PieceType.NONE;
+
+                this._board[i][j] = null;
             }
         }
     }
@@ -32,6 +32,8 @@ class Board {
     //movePiece ?
     //helper function delete later..
 
+    //feel free to change it and make it so the pieces are printed in a good way.
+
     printBoard(){
         console.log("Current Board is: ");
         console.log("==========================================");
@@ -40,10 +42,10 @@ class Board {
             let row = "| "
             for(let j = 0; j < BoardSize; j++){
                 let field = this._board[i][j];
-                let toPrint = field;
+                let toPrint = "";
                 let colorPrefix ="0";
 
-                if(field instanceof Piece){
+                if(field !== null){
                     toPrint = field.getType();
                     if(field.getPlayerType() === Player.WHITE){
                         colorPrefix = "w";
@@ -58,6 +60,43 @@ class Board {
             console.log("------------------------------------------");
         }
         console.log("==========================================");
+    }
+
+    moveIsOutOfBounds(position) {
+        return (position.x < 0 || position.x > 7 || position.y < 0 || position.y > 7);
+    }
+
+    makeMove(move){
+        let piece = move.piece;
+        this.clearField(move.previousPosition);
+        piece.setPosition(move.newPosition);
+        this.clearField(move.newPosition);
+        this.setPiece(piece);
+    }
+
+    makeCastle(move){
+        let rookMove = move.getRookMoveForCastling(this);
+        this.makeMove(move);
+        if(rookMove === null) return;
+        this.makeMove(rookMove);
+    }
+
+    clearField(position){
+        this._board[position.x][position.y] = null;
+    }
+
+    getAllPiecesOfPlayer(playerType){
+        let myPieces = [];
+
+        for(let i = 0; i < BoardSize; i++){
+            for(let j = 0; j < BoardSize; j++){
+                let piece = this.getObjAtPosition(new Position(i,j));
+                if(piece !== null && piece.getPlayerType() === playerType){
+                    myPieces.push(piece);
+                }
+            }
+        }
+        return myPieces;
     }
 }
 
