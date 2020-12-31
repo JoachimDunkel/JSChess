@@ -19,4 +19,8 @@ class Position {
     equals(position){
         return (this.x === position.x && this.y === position.y);
     }
+
+    static fromChessNumbering(file, rank){
+        return new Position(file, rank -1);
+    }
 }

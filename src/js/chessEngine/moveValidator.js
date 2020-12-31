@@ -19,7 +19,7 @@ class MoveValidator {
             let moveGenerator = new MoveGenerator(newGameState);
             moveGenerator.withCastleMoves = false;
             let possibleMoves = moveGenerator.generateMovesFor(opponentPiece);
-            let validMoves = this.validateAllMoves(possibleMoves);
+            let validMoves = this.validateAllMoves(possibleMoves, newGameState);
             for (const validMove of validMoves) {
                 if(validMove.newPosition.equals(myKingPosition)){
                     return true;
@@ -29,13 +29,13 @@ class MoveValidator {
         return false;
     }
 
-    moveIsValid(move){
+    moveIsValid(move, gameState){
         //Check if move is in bounds
-        if(this._gameState.board.moveIsOutOfBounds(move.newPosition))
+        if(gameState.board.moveIsOutOfBounds(move.newPosition))
             return false;
 
         //Check if move is blocked by own piece
-        let obj = this._gameState.board.getObjAtPosition(move.newPosition)
+        let obj = gameState.board.getObjAtPosition(move.newPosition)
         if(obj instanceof Piece){
             if(obj.getPlayerType() === move.piece.getPlayerType()){
                 return false;
@@ -48,18 +48,18 @@ class MoveValidator {
         let validMoves = [];
 
         for (const move of movesToValidate) {
-            if(this.moveIsValid(move) && !this.moveLeadsToCheckOn(move, this._gameState.myColor)){
+            if(this.moveIsValid(move, this._gameState) && !this.moveLeadsToCheckOn(move, this._gameState.myColor)){
                 validMoves.push(move);
             }
         }
         return validMoves;
     }
 
-    validateAllMoves(movesToValidate){
+    validateAllMoves(movesToValidate, gameState){
         let validMoves = [];
 
         for (const move of movesToValidate) {
-            if(this.moveIsValid(move)){
+            if(this.moveIsValid(move, gameState)){
                 validMoves.push(move);
             }
         }

@@ -3,7 +3,6 @@ class MoveHandler {
         this._gameState = gameState;
         this.moveGenerator = new MoveGenerator(this._gameState);
         this.moveValidator = new MoveValidator(this._gameState);
-
     }
 
     startTurnInteraction(){
@@ -13,7 +12,10 @@ class MoveHandler {
             this.startGameOverEvent(this._gameState.gameStatus);
         }
 
-        //TODO if fifty move rule game over draw...
+        //if fifty moves rule its a draw
+        if(this._gameState.fiftyMovesCounter >= 50){
+            this.startGameOverEvent(GameStatus.DRAW);
+        }
 
         this.allPossiblesMovesForPlayer = this._generateAllPossibleMovesForPlayer(this._gameState.myColor);
 
@@ -27,9 +29,6 @@ class MoveHandler {
             }
             this.startGameOverEvent(this._gameState.gameStatus);
         }
-
-        let move = this.askMoveFromUser();
-        this._gameState.update(move);
     }
 
     startGameOverEvent(gameStatus){
@@ -56,11 +55,11 @@ class MoveHandler {
         let possibleMoves = [];
         for (const piece of myPieces) {
             let moves = this._generateValidMovesFor(piece);
-            possibleMoves.push(moves);
+            for (const move of moves) {
+                possibleMoves.push(move);
+            }
         }
-
         return possibleMoves;
-
     }
 
     askMoveFromUser(){

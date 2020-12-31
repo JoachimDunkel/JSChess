@@ -40,7 +40,7 @@ class Board {
             let row = "| "
             for(let j = 0; j < BoardSize; j++){
                 let field = this._board[i][j];
-                let toPrint = field;
+                let toPrint = "";
                 let colorPrefix ="0";
 
                 if(field !== null){

@@ -27,7 +27,7 @@ class GameState {
 
     setMyColor(myColor){
         this.myColor = myColor;
-        this.opponenColor = Player.BLACK;
+        this.opponenColor = Player.BLACK
         if(this.myColor === Player.BLACK){
             this.opponenColor = Player.WHITE;
         }

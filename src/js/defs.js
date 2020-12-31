@@ -11,3 +11,5 @@ const BoardSize = 8;
 const MoveType = {DEFAULT : 0, EN_PASSANT : 1, CASTLE : 2, PAWN_PROMOTION : 3}
 
 const GameStatus = {RUNNING: 1, WON : 2, LOST : 3, DRAW : 4}
+
+const FILE = {A : 0, B : 1, C : 2, D : 3, E : 4 , F: 5 , G : 6, H : 7}

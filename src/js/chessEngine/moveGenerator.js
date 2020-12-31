@@ -61,6 +61,8 @@ class MoveGenerator {
             promotion_row = 0;
         }
 
+        //TODO not correct.. pawn can only advance if no piece infront of him of any color...
+
         let pawnMoves = [
             new Move(piece, MoveType.DEFAULT, new Position(0, y)),
         ]
@@ -189,7 +191,7 @@ class MoveGenerator {
         //and it is an x distance of one..
 
         //en passant not possible yet..
-        if(this._gameState.halfMoveCounter < 3) return false;
+        if(this._gameState.halfMoveCounter < 3 || this._gameState.lastMoveMade === null) return false;
 
         return ((this._gameState.lastMoveMade.piece.getType() === PieceType.PAWN &&
             this._gameState.lastMoveMade.piece.getPosition().y === pawn.getPosition().y &&

@@ -12,7 +12,9 @@ class Game {
     run(){
         while (BOOL.TRUE){
             if(this.gameState.currentPlayer === this.myPlayerType){
-                let move = new MoveHandler(this.gameState).startTurnInteraction();
+                let moveHandler = new MoveHandler(this.gameState).startTurnInteraction();
+                let move = moveHandler.askMoveFromUser();
+
                 this.gameState.update(move);
                 // connectionHandler... send update over server..
             }

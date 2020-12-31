@@ -21,7 +21,7 @@ describe("MoveValidator", () =>{
         ]
 
         moves.forEach(move => {
-            let result = moveValidator.moveIsValid(move);
+            let result = moveValidator.moveIsValid(move, gameState);
             expect(result).toBeFalse();
         });
     });
@@ -52,7 +52,7 @@ describe("MoveValidator", () =>{
 
         let move = new Move(rook, MoveType.DEFAULT, new Position(0,1));
 
-        let result = moveValidator.moveIsValid(move);
+        let result = moveValidator.moveIsValid(move, gameState);
         expect(result).toBeFalse();
     });
 

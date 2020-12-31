@@ -152,7 +152,6 @@ describe("Game state", () =>{
         expect(gameState.fiftyMovesCounter).toBe(0);
     });
 
-    //TODO not working until create Pawn moves is fixed
     it('deletes the correct pawn on an enPassant move', function () {
         new TestHelper().createValidBoard(gameState);
 
@@ -170,7 +169,7 @@ describe("Game state", () =>{
         let containsENPassantMove = false;
         let enPassantMove = null;
         for (const pMove of possibleMovesForWhite) {
-            if(pMove.newPosition.equals(new Position(1,1))){
+            if(pMove.newPosition.equals(new Position(1,5))){
                 containsENPassantMove = true;
                 enPassantMove = pMove;
             }
@@ -182,7 +181,6 @@ describe("Game state", () =>{
 
         expect(wPawn.getPosition().equals(new Position(1,5))).toBeTrue();
         expect(gameState.board.getObjAtPosition(bPawn.getPosition())).toBe(null);
-
     });
 
     it('Inserts a queen on the right spot and deletes the pawn on promotion', function () {
