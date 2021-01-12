@@ -7,6 +7,7 @@ class MoveGenerator {
     }
 
     generateMovesFor(piece){
+        //console.log("Piece to be moved is = ", piece.getType());
         switch (piece.getType()) {
             case PieceType.PAWN:
                 return this._createPawnMoves(piece);
@@ -52,35 +53,37 @@ class MoveGenerator {
     }
 
     _createPawnMoves(piece){
-        let y = 1;
-        let promotion_row = 7;
+        //let y = 1;
+        let y = -1;
+        let promotion_row = 0;
 
         if(piece.getPlayerType() === Player.BLACK){
             y = -1;
-            promotion_row = 0;
+            promotion_row = 7;
         }
 
         let pawnMoves = [];
+
 
         if(this._pawnCanMoveOneSquare(piece)){
             pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0, y)));
         }
 
         if(this._pawnCanMoveTwoSquares(piece)){
-            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0,2*y)));
+            pawnMoves.push(new Move(piece, MoveType.DEFAULT, new Position(0, 2*y)));
         }
 
-        let leftTake = new Position(-1,y);
+        let leftTake = new Position(-1,y);  // TODO check if works
         if(this._pawnCanTake(leftTake, piece)){
             pawnMoves.push(new Move(piece, MoveType.DEFAULT, leftTake));
         }
 
         let rightTake = new Position(1,y);
-        if(this._pawnCanTake(rightTake, piece)){
+        if(this._pawnCanTake(rightTake, piece)){ // TODO check if works
             pawnMoves.push(new Move(piece, MoveType.DEFAULT, rightTake));
         }
 
-        if(this._pawnCanEnPassant(piece)){
+        if(this._pawnCanEnPassant(piece)){ // TODO check if works
             if(this._gameState.lastMoveMade.piece.getPosition().x > piece.getPosition().x){
                 pawnMoves.push(new Move(piece, MoveType.EN_PASSANT, new Position(1,y)));
             }
@@ -161,14 +164,18 @@ class MoveGenerator {
                 }
                 break;
             }
+
+            //console.log("move = ", move);
+            //console.log("position = ", position);
+
             possibleMoves.push(new Move(piece,MoveType.DEFAULT, position));
         }
     }
 
     _pawnCanMoveTwoSquares(pawn){
-        let yPositionForDoubleMove = 6;
+        let yPositionForDoubleMove = 1;
         if(pawn.getPlayerType() === Player.WHITE){
-            yPositionForDoubleMove = 1;
+            yPositionForDoubleMove = 6; // switched
         }
         return (pawn.getPosition().y === yPositionForDoubleMove);
     }
@@ -176,7 +183,7 @@ class MoveGenerator {
     _pawnCanMoveOneSquare(pawn){
         //if an object is in-front of it, it can not move...
         let yDirection = 1;
-        if(this._gameState.myColor === Player.BLACK){
+        if(this._gameState.myColor === Player.WHITE){  //switched
             yDirection = - 1;
         }
         let newPosition = pawn.getPosition().add(new Position(0, yDirection));

@@ -33,7 +33,86 @@ class GameState {
         }
     }
 
-    fillBoardWithPieces(){
+    getMyColor(){
+        return this.myColor;
+    }
+
+    initBoardUI(myColor){
+        var cls='';
+        var gray ='gray';
+        var white = "white";
+
+        var x = 1;
+        for(let i = 1; i<=64;i++)
+        {
+            if(x && i%2!=0 ||!x&&i%2==0)
+            {
+                cls = white;
+            }
+            else
+            {
+                cls = gray;
+            }
+            var id_div = i - 1;
+            var content="<div id='"+id_div.toString()+"' class='"+cls+"'></div>";
+            $("#board_game").append(content);
+            if(i%8===0)
+                x=!x;
+        }
+    }
+
+    renderBoard()
+    {
+        var black_p = this.board.getAllPiecesOfPlayer(Player.BLACK);
+        //TODO: Take the length and not 16 since during the game it might be less
+        for(let i = 0; i < 16; i++)
+        {
+            var position = black_p[i].getPosition();
+            var piece_name = black_p[i].getImageSource();
+            var img = new Image();
+            img.src = "images/"+piece_name;
+            console.log("Board Visual piece_name_b ",img.src);
+
+            var location = (position.y * 8) + (position.x);
+            console.log("Piece_name_b position",location);
+
+            console.log("position " + position);
+
+            // add img of the piece to the correct location(= correct div id)
+            $(`#board_game div:eq(${location})`).append(img);
+            $(`#board_game div:eq(${location}) img`).attr('id', location.toString());
+
+        }
+
+        var white_p = this.board.getAllPiecesOfPlayer(Player.WHITE);
+        //TODO: Take the length and not 16 since during the game it might be less
+        for(let i = 0; i < 16; i++)
+        {
+            var position = white_p[i].getPosition();
+            var piece_name = white_p[i].getImageSource();
+            var img = new Image();
+            img.src = "images/"+piece_name;
+            console.log("Board Visual piece_name ",img.src);
+
+            var location = (position.y * 8) + (position.x);
+            console.log("Piece_name position",location);
+
+            // add img of the piece to the correct location(= correct div id)
+            $(`#board_game div:eq(${location})`).append(img);
+            $(`#board_game div:eq(${location}) img`).attr('id', location.toString());
+
+        }
+
+
+    }
+
+    fillBoardWithPieces(myColor){
+        //TODO: CHeck if board is reverted. IF not then revert/transpose the pieces for black
+        //If this is the case, don't forget to do this any time when we render/update the board.
+        if(myColor === Player.BLACK) {
+            //
+        }
+
         let pieceFactory = new PieceFactory();
         let whiteSet = pieceFactory.createFullSetFor(Player.WHITE);
         let blackSet = pieceFactory.createFullSetFor(Player.BLACK);
@@ -47,6 +126,9 @@ class GameState {
         this.board.setPieces(blackSet);
 
         console.log("Board initialized");
+
+        this.renderBoard();
+        this.board.printBoard();
     }
 
     update(move){
@@ -78,11 +160,14 @@ class GameState {
         }
 
         this.updateCastlingRights(move);
-
         this.makeMove(move);
 
         this.lastMoveMade = move;
         this.allMovesMade.push(move);
+        //TODO: render board
+        // + printBoard()
+
+        this.board.printBoard();
     }
 
     invalidateOpponentInCheck(move){

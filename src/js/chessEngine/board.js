@@ -7,9 +7,9 @@ class Board {
     //Fuck javascript doesn't even have 2D-arrays?
     initEmptyBoard() {
         this._board = [];
-        for(let i = 0; i < BoardSize; i++){
+        for(let i = 0; i < BoardSize; i++){ //y
             this._board[i] = [];
-            for(let j = 0; j < BoardSize; j++){
+            for(let j = 0; j < BoardSize; j++){ //x
 
                 this._board[i][j] = null;
             }
@@ -22,11 +22,11 @@ class Board {
 
     setPiece(piece){
         let position = piece.getPosition();
-        this._board[position.x][position.y] = piece;
+        this._board[position.y][position.x] = piece; //x,y switched in oder to print board correctly
     }
 
     getObjAtPosition(Position){
-        return this._board[Position.x][Position.y];
+        return this._board[Position.y][Position.x]; //x,y switched
     }
 
     //movePiece ?
@@ -82,7 +82,7 @@ class Board {
     }
 
     clearField(position){
-        this._board[position.x][position.y] = null;
+        this._board[position.y][position.x] = null; //switched
     }
 
     getAllPiecesOfPlayer(playerType){
@@ -90,7 +90,7 @@ class Board {
 
         for(let i = 0; i < BoardSize; i++){
             for(let j = 0; j < BoardSize; j++){
-                let piece = this.getObjAtPosition(new Position(i,j));
+                let piece = this.getObjAtPosition(new Position(j,i)); // i,j switched
                 if(piece !== null && piece.getPlayerType() === playerType){
                     myPieces.push(piece);
                 }

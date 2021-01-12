@@ -5,24 +5,35 @@ class Game {
         this.connectionHandler = connectionHandler;
         this.gameState = new GameState();
         this.gameState.setMyColor(this.connectionHandler.provideUserColorFromServer());
-        this.gameState.fillBoardWithPieces();
+
+        this.gameState.initBoardUI(myPlayerType)
+        this.gameState.fillBoardWithPieces(myPlayerType); // filling depends on the player's colour
+
         this.myPlayerType = myPlayerType;
     }
 
     run(){
-        while (BOOL.TRUE){
-            if(this.gameState.currentPlayer === this.myPlayerType){
-                let moveHandler = new MoveHandler(this.gameState).startTurnInteraction();
-                let move = moveHandler.askMoveFromUser();
+        //check states
+        //update
+        //wait x time and run run() again.
+        
+        // No WHILE-LOOP here anymore
 
-                this.gameState.update(move);
-                // connectionHandler... send update over server..
-            }
-            else{
+        this.gameState.currentPlayer = this.connectionHandler.getCurrentPlayer()
+
+        if(this.gameState.currentPlayer === this.myPlayerType){
+            let moveHandler = new MoveHandler(this.gameState);
+
+            moveHandler.startTurnInteraction();
+            moveHandler.askMoveFromUser();
+
+        }
+        else
+            {
                 let move = this.connectionHandler.awaitOpponentMove();
                 this.gameState.update(move);
             }
         }
-    }
-
 }
+
+

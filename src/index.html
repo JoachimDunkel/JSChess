@@ -3,17 +3,25 @@
 <head>
     <meta charset="utf-8">
     <title>JSChess</title>
+    <link rel="stylesheet" href="style.css">
     <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+
+
 </head>
 <body>
 <header>
     <h3>JS Chess</h3>
 </header>
-<div id="FenInDiv">
-    Fen:<br/>
-    <input type="text" id="fenIn"/>
-    <button type="button" id="SetFen">Set Position</button>
+<div>
+    <button id="newGameBtn" onclick="init();">New Game</button>
 </div>
+<div id="FenInDiv">
+    <br/>
+    <input type="text" id="fenIn"/>
+    <button type="button" id="SetFen">Join game</button>
+</div>
+
+<div id="board_game"></div>
 
 <script src="js/pieces/piece.js"></script>
 <script src="js/pieces/imageSourceProvider.js"></script>
@@ -21,7 +29,8 @@
 <script src="js/pieces/pieceFactory.js"></script>
 
 <script src="js/game.js"></script>
-<script src="js/jquery-1.10.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="js/lodash.js"></script>
 
 <script src="js/chessEngine/moveValidator.js"></script>
@@ -30,7 +39,11 @@
 <script src="js/chessEngine/checkHandler.js"></script>
 <script src="js/chessEngine/gameState.js"></script>
 <script src="js/chessEngine/board.js"></script>
+<script src="js/chessEngine/moveGenerator.js"></script>
 <script src="js/defs.js"></script>
+<script src="js/pieces/move.js"></script>
+
 <script src="js/main.js"></script>
+
 </body>
 </html>

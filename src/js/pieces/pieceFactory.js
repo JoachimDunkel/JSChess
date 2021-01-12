@@ -11,7 +11,7 @@ class PieceFactory {
     createFullSetFor(PlayerType){
         var figures_y;
         var pawns_y;
-        if(PlayerType === Player.WHITE){
+        if(PlayerType === Player.BLACK){ // switched
             figures_y = 0;
             pawns_y = 1;
         }
