@@ -42,11 +42,11 @@ class MoveGenerator {
         }
 
         if(this._queenSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(-2,0)))
+            possibleMoves.push(new Move(piece, MoveType.CASTLE, new Position(-2,0)))
         }
 
         if(this._kingSideCastlePossible(piece)){
-            possibleMoves.add(new Move(piece, MoveType.CASTLE, new Position(2,0)))
+            possibleMoves.push(new Move(piece, MoveType.CASTLE, new Position(2,0)))
         }
 
         return possibleMoves;
