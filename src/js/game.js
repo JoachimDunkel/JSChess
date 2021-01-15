@@ -40,8 +40,8 @@ class Game {
         let to = moveUserWantsToMake[1];
         if(this.gameState.myColor === Player.WHITE){
 
-            let rotatedFrom = Util.TransformPosition180(from);
-            let rotatedTo = Util.TransformPosition180(to);
+            let rotatedFrom = Util.RotatePositionY180(from);
+            let rotatedTo = Util.RotatePositionY180(to);
             moveUserWantsToMake = [rotatedFrom, rotatedTo];
         }
 
@@ -61,5 +61,26 @@ class Game {
     updateGameState(){
         this.updateGameStateEvent.trigger(this.gameState);
         console.log("Update game state event triggered");
+    }
+
+    requestPossibleMoves(fromPosition){
+        let rotatedFrom = fromPosition;
+        if(this.gameState.myColor === Player.WHITE){
+            rotatedFrom = Util.RotatePositionY180(fromPosition);
+        }
+
+        let possibleMoves = this.moveHandler.requestPossibleMovesForPosition(rotatedFrom);
+        let parsedMoves = [];
+        for (const move of possibleMoves) {
+            let newMove = _.cloneDeep(move);
+            if(this.gameState.myColor === Player.WHITE){
+                newMove.newPosition = Util.RotatePositionY180(newMove.newPosition);
+                newMove.previousPosition = Util.RotatePositionY180(newMove.previousPosition);
+            }
+
+            parsedMoves.push(newMove);
+        }
+        return parsedMoves;
+
     }
 }

@@ -1,7 +1,8 @@
 class View {
     constructor() {
-        this.playEvent = new MvcEvent();
-        this.userClickMoveHandler = new UserClickMoveHandler(this.playEvent);
+        this.playMoveEvent = new MvcEvent();
+        this.askPossibleMovesEvent = new SingleReturnEvent();
+        this.userClickMoveHandler = new UserClickMoveHandler(this.playMoveEvent, this.askPossibleMovesEvent);
         this.boardUi = new BoardUi(this.userClickMoveHandler);
     }
 

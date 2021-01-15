@@ -1,6 +1,6 @@
 class Util {
 
-    static TransformPosition180(position){
+    static RotatePositionY180(position){
         let mapping = {
             0: 7,
             1: 6,

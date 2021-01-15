@@ -72,7 +72,7 @@ class BoardUi {
 
             let uiPosition = position;
             if(rotate){
-                uiPosition = Util.TransformPosition180(position);
+                uiPosition = Util.RotatePositionY180(position);
             }
             let location = Util.TwoToOneDimension(uiPosition);
             console.log("Piece_name_b position",location);

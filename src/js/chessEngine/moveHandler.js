@@ -60,18 +60,16 @@ class MoveHandler {
         return possibleMoves;
     }
 
-    askMoveFromUser(){
-        while (BOOL.TRUE){
-            //Await user move. from ui hook here...
-
-            //lets say we want to make a knight move... this should be retrieved from ui.
-            let moveUserWantsToMake = {oldPosition : new Position(1,0), newPosition : new Position(0,2)};
-
-            //look up if we can make this move in our datastructure..
-            //re-do until user makes a valid move...
+    requestPossibleMovesForPosition(fromPosition){
+        let possibleMovesToMake = [];
+        for (const move of this.allPossiblesMovesForPlayer) {
+            if(move.previousPosition.equals(fromPosition)){
+                possibleMovesToMake.push(move);
+            }
         }
-
+        return possibleMovesToMake;
     }
+
 
 
     _generateValidMovesFor(piece){
