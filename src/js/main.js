@@ -1,6 +1,6 @@
 
-$(function() {
-	init();
+$( document ).ready(function() {
+
 });
 
 function init() {
