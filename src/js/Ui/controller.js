@@ -11,5 +11,6 @@ class Controller {
 
     run(){
         this._view.render();
+        this._game.startTurn();
     }
 }

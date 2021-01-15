@@ -9,13 +9,15 @@ class MoveHandler {
 
         //game over
         if(this._gameState.gameStatus !== GameStatus.RUNNING){
-            this.startGameOverEvent(this._gameState.gameStatus);
+            return this._gameState.gameStatus;
         }
 
         //if fifty moves rule its a draw
         if(this._gameState.fiftyMovesCounter >= 50){
-            this.startGameOverEvent(GameStatus.DRAW);
+
+            return this._gameState.gameStatus;
         }
+
 
         this.allPossiblesMovesForPlayer = this._generateAllPossibleMovesForPlayer(this._gameState.myColor);
 
@@ -27,14 +29,8 @@ class MoveHandler {
             else{
                 this._gameState.gameStatus = GameStatus.DRAW;
             }
-            this.startGameOverEvent(this._gameState.gameStatus);
         }
-    }
-
-    startGameOverEvent(gameStatus){
-        console.log("Game is over, its a ", gameStatus);
-        // => show in ui hook
-        // => send signal over server..
+        return this._gameState.gameStatus;
     }
 
     lookupMove(moveUserWantsToMake) {

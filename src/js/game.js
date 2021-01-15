@@ -22,18 +22,28 @@ class Game {
     //     }
     // }
 
+    //TODO for debugging for now..
+    //if its opponents turn block all view events
+    //and wait for move from connectionhandler then update view..
+    startTurn(){
+        this.moveHandler = new MoveHandler(this.gameState);
+        let gameStatus = this.moveHandler.startTurnInteraction();
+        if(gameStatus !== GameStatus.RUNNING){
+            this.gameOver(gameStatus);
+        }
+    }
+
     tryMakeMove(moveUserWantsToMake){
-        let moveHandler = new MoveHandler(this.gameState).startTurnInteraction();
-        let move = moveHandler.lookupMove(moveUserWantsToMake);
+        let move = this.moveHandler.lookupMove(moveUserWantsToMake);
 
         if(move !== null){
             this.gameState.update(move);
         }
-        this.updateGameStateEvent.trigger();
+        this.updateGameState();
     }
 
-    gameOver(){
-        this.gameOverEvent.trigger();
+    gameOver(gameStatus){
+        this.gameOverEvent.trigger(gameStatus);
         console.log("Game over event triggered");
     }
 
@@ -41,5 +51,4 @@ class Game {
         this.updateGameStateEvent.trigger();
         console.log("Update game state event triggered");
     }
-
 }
