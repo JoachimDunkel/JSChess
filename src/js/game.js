@@ -5,7 +5,6 @@ class Game {
         this.gameState = new GameState();
         this.gameState.setMyColor(this.connectionHandler.provideUserColorFromServer());
         this.gameState.fillBoardWithPieces();
-        this.myPlayerType = this.gameState.myColor;
 
         this.updateGameStateEvent = new MvcEvent();
         this.gameOverEvent = new MvcEvent();
@@ -22,7 +21,6 @@ class Game {
     //     }
     // }
 
-    //TODO for debugging for now..
     //if its opponents turn block all view events
     //and wait for move from connectionhandler then update view..
     startTurn(){
@@ -64,23 +62,34 @@ class Game {
     }
 
     requestPossibleMoves(fromPosition){
-        let rotatedFrom = fromPosition;
-        if(this.gameState.myColor === Player.WHITE){
-            rotatedFrom = Util.RotatePositionY180(fromPosition);
-        }
+        let rotatedFrom = this._rotatePositionIfWhite(fromPosition);
 
         let possibleMoves = this.moveHandler.requestPossibleMovesForPosition(rotatedFrom);
         let parsedMoves = [];
         for (const move of possibleMoves) {
             let newMove = _.cloneDeep(move);
-            if(this.gameState.myColor === Player.WHITE){
-                newMove.newPosition = Util.RotatePositionY180(newMove.newPosition);
-                newMove.previousPosition = Util.RotatePositionY180(newMove.previousPosition);
-            }
 
+            newMove.newPosition = this._rotatePositionIfWhite(newMove.newPosition);
+            newMove.previousPosition = this._rotatePositionIfWhite(newMove.previousPosition);
             parsedMoves.push(newMove);
         }
         return parsedMoves;
+    }
 
+    getAllMyPiecePositions(){
+        let myPieces = this.gameState.board.getAllPiecesOfPlayer(this.gameState.myColor);
+        let positions = []
+        for (const piece of myPieces) {
+            let position = _.cloneDeep(piece.getPosition());
+            position = this._rotatePositionIfWhite(position);
+            positions.push(position);
+        }
+        return positions;
+    }
+
+    _rotatePositionIfWhite(position){
+        if(this.gameState.myColor === Player.WHITE){
+            return Util.RotatePositionY180(position);
+        }
     }
 }
