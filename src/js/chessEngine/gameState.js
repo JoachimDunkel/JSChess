@@ -177,6 +177,15 @@ class GameState {
         this.blackKing = blackKing;
     }
 
+    changeActivePlayer(){
+        if(this.myColor === Player.WHITE){
+            this.setMyColor(Player.BLACK);
+        }
+        else {
+            this.setMyColor(Player.WHITE);
+        }
+    }
+
     iAmInCheck(){
         if(this.myColor === Player.WHITE && this.whiteIsInCheck){
             return true;

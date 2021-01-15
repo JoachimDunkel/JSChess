@@ -48,17 +48,16 @@ class Game {
         if(move !== null){
             this.gameState.update(move);
         }
-        this.updateGameState();
+        //TODO only for debugging
+        this.gameState.changeActivePlayer();
+        this.startTurn();
+
+        //this.updateGameStateEvent.trigger(this.gameState);
     }
 
     gameOver(gameStatus){
         this.gameOverEvent.trigger(gameStatus);
         console.log("Game over event triggered");
-    }
-
-    updateGameState(){
-        this.updateGameStateEvent.trigger(this.gameState);
-        console.log("Update game state event triggered");
     }
 
     requestPossibleMoves(fromPosition){
@@ -91,5 +90,6 @@ class Game {
         if(this.gameState.myColor === Player.WHITE){
             return Util.RotatePositionY180(position);
         }
+        return position;
     }
 }
