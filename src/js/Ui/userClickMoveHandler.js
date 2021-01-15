@@ -1,5 +1,6 @@
 class UserClickMoveHandler {
-    constructor(playEvent, askPossibleMovesEvent) {
+    constructor(playEvent, askPossibleMovesEvent, askAllMyPiecePositions) {
+        this.askAllMyPiecePositions = askAllMyPiecePositions;
         this.reset();
         this.playEvent = playEvent;
         this.askPossibleMovesEvent = askPossibleMovesEvent;
@@ -16,16 +17,20 @@ class UserClickMoveHandler {
 
     handleUserClickEvent(cellId, position){
         if(!this.userHasAlreadyClickedCell){
-            this.fromCellId = cellId;
-            this.fromPosition = position;
-            this.userHasAlreadyClickedCell = true;
-            this.highlightCell();
-            this.highlightPossibleMoves(this.fromPosition);
+            if(this.userClickedOwnPiece(position)){
+                this.fromCellId = cellId;
+                this.fromPosition = position;
+                this.userHasAlreadyClickedCell = true;
+                this.highlightCell();
+                this.highlightPossibleMoves(this.fromPosition);
+            }
+            else{
+                this.reset();
+            }
         }
         else{
             this.toPosition = position;
 
-            //nur triggern wenn das feld in den gehighlighteten möglichen zügen ist.
             let isInPossibleMoves = false;
             let cellIdUserClickedAt = Util.TwoToOneDimension(this.toPosition);
             for (const thisCellId of this.possibleMovesCellIds) {
@@ -78,5 +83,16 @@ class UserClickMoveHandler {
             let cell = document.getElementById(cellId);
             cell.style.backgroundColor = "";
         }
+    }
+
+    userClickedOwnPiece(position) {
+        this.askAllMyPiecePositions.trigger();
+        let ownPiecePositions = this.askAllMyPiecePositions.result;
+        for (const piecePosition of ownPiecePositions) {
+            if(position.equals(piecePosition)){
+                return true;
+            }
+        }
+        return false;
     }
 }
