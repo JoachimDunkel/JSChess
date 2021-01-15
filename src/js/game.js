@@ -50,7 +50,7 @@ class Game {
     }
 
     updateGameState(){
-        this.updateGameStateEvent.trigger();
+        this.updateGameStateEvent.trigger(this.gameState);
         console.log("Update game state event triggered");
     }
 }

@@ -1,7 +1,8 @@
 class View {
     constructor() {
         this.playEvent = new MvcEvent();
-        this.boardUi = new BoardUi();
+        this.userClickMoveHandler = new UserClickMoveHandler(this.playEvent);
+        this.boardUi = new BoardUi(this.userClickMoveHandler);
     }
 
     initUi(){
@@ -10,10 +11,12 @@ class View {
         this.message.className = 'message';
         document.body.appendChild(this.message);
 
-        this.boardUi.initEmptyBoard(this.playEvent);
+        this.boardUi.initEmptyBoard();
     }
 
     updateBoard(gameState){
+        this.boardUi.clearBoardUi();
+
         let rotate = false;
         if(gameState.myColor === Player.WHITE) rotate = true;
         this.boardUi.fillBoardUi(gameState.board, rotate);

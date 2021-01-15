@@ -33,10 +33,12 @@ class MoveHandler {
         return this._gameState.gameStatus;
     }
 
-    lookupMove(moveUserWantsToMake) {
+    lookupMove(userMove) {
+        let from = userMove[0];
+        let to = userMove[1];
         //iterate over every move and see if it fits..
         for (const move of this.allPossiblesMovesForPlayer) {
-            if(move.previousPosition === moveUserWantsToMake.oldPosition && move.newPosition === moveUserWantsToMake.newPosition){
+            if(move.previousPosition.equals(from) && move.newPosition.equals(to)){
                 return move;
             }
         }
