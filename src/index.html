@@ -3,17 +3,23 @@
 <head>
     <meta charset="utf-8">
     <title>JSChess</title>
-    <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+<!--    <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>-->
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 <header>
     <h3>JS Chess</h3>
 </header>
-<div id="FenInDiv">
-    Fen:<br/>
-    <input type="text" id="fenIn"/>
-    <button type="button" id="SetFen">Set Position</button>
+<div>
+    <button id="newGameBtn" onclick="init();">New Game</button>
 </div>
+<div id="JoinGameDialogue">
+    <br/>
+
+    <button type="button" id="joinGameBtn">Join game</button>
+</div>
+
+<div id="board_game"></div>
 
 <script src="js/pieces/piece.js"></script>
 <script src="js/pieces/imageSourceProvider.js"></script>
@@ -32,5 +38,13 @@
 <script src="js/chessEngine/board.js"></script>
 <script src="js/defs.js"></script>
 <script src="js/main.js"></script>
+
+<script src="js/Ui/controller.js"></script>
+<script src="js/Ui/mvcEvent.js"></script>
+<script src="js/Ui/view.js"></script>
+
+
+
+
 </body>
 </html>

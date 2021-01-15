@@ -1,0 +1,24 @@
+.gray {
+    background-color: #aa8351;
+    width: 100px;
+    height: 10%;
+    min-height: 100px;
+    float:left;
+}
+.white {
+    background-color: #fdf3c7;
+    width: 100px;
+    height: 10%;
+    min-height: 100px;
+    float:left;
+}
+
+#board_game div:nth-of-type(8n+1){
+    clear:left;
+}
+
+div img {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

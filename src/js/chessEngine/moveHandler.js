@@ -37,7 +37,7 @@ class MoveHandler {
         // => send signal over server..
     }
 
-    _lookupMove(moveUserWantsToMake) {
+    lookupMove(moveUserWantsToMake) {
         //iterate over every move and see if it fits..
         for (const move of this.allPossiblesMovesForPlayer) {
             if(move.previousPosition === moveUserWantsToMake.oldPosition && move.newPosition === moveUserWantsToMake.newPosition){
@@ -70,15 +70,11 @@ class MoveHandler {
             let moveUserWantsToMake = {oldPosition : new Position(1,0), newPosition : new Position(0,2)};
 
             //look up if we can make this move in our datastructure..
-            let move =  this._lookupMove(moveUserWantsToMake);
-
-            if(move !== null){
-                return move;
-            }
             //re-do until user makes a valid move...
         }
 
     }
+
 
     _generateValidMovesFor(piece){
         let possibleMoves = this.moveGenerator.generateMovesFor(piece);
