@@ -13,11 +13,12 @@ class View {
         this.boardUi.initEmptyBoard(this.playEvent);
     }
 
-    updateBoard(board){
-        this.boardUi.fillBoardWithPieces(board);
+    updateBoard(gameState){
+        let rotate = false;
+        if(gameState.myColor === Player.WHITE) rotate = true;
+        this.boardUi.fillBoardUi(gameState.board, rotate);
         console.log("View. Update board was called");
     }
-
 
     gameOver(gameStatus){
         //TODO change message based on gameStatus

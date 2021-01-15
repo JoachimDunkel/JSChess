@@ -31,6 +31,8 @@ class Game {
         if(gameStatus !== GameStatus.RUNNING){
             this.gameOver(gameStatus);
         }
+
+        this.updateGameStateEvent.trigger(this.gameState);
     }
 
     tryMakeMove(moveUserWantsToMake){

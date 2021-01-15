@@ -17,16 +17,16 @@ class BoardUi {
 
                 let colorToUse = "";
                 if(even && !shiftColor){
-                    colorToUse = gray;
+                    colorToUse = white;
                 }
                 if(!even && !shiftColor){
-                    colorToUse = white;
+                    colorToUse = gray;
                 }
                 if(even && shiftColor){
-                    colorToUse = white;
+                    colorToUse = gray;
                 }
                 if(!even && shiftColor){
-                    colorToUse = gray;
+                    colorToUse = white;
                 }
 
                 cell.id = count.toString();
@@ -43,47 +43,41 @@ class BoardUi {
         }
     }
 
-
-    fillBoardWithPieces(gameBoard){
+    fillBoardUi(gameBoard, rotate){
         let blackPieces = gameBoard.getAllPiecesOfPlayer(Player.BLACK);
-        let num_pieces = blackPieces.length;
+
+        this.placePieces(blackPieces, rotate);
+
+        let whitePieces = gameBoard.getAllPiecesOfPlayer(Player.WHITE);
+        this.placePieces(whitePieces, rotate);
+    }
+
+    placePieces(pieces, rotate){
+        let num_pieces = pieces.length;
+
         for(let i = 0; i < num_pieces; i++)
         {
-            let position = blackPieces[i].getPosition();
-            let piece_name = blackPieces[i].getImageSource();
+            let position = pieces[i].getPosition();
+            let piece_name = pieces[i].getImageSource();
             let img = new Image();
             img.src = "images/"+piece_name;
             console.log("Board Visual piece_name_b ",img.src);
 
-            let location = this.TwoToOneDimension(position);
+            let uiPosition = position;
+            if(rotate){
+                uiPosition = this.TransformPosition180(position);
+            }
+            let location = this.TwoToOneDimension(uiPosition);
             console.log("Piece_name_b position",location);
 
-            console.log("position " + position);
+            console.log("position " + uiPosition);
 
-            // add img of the piece to the correct location(= correct div id)
-            $(`#board_game div:eq(${location})`).append(img);
-            $(`#board_game div:eq(${location}) img`).attr('id', location.toString());
-        }
+            //probably not the best idea.. (but it should be distinguishable from the cells right ?
+            img.id = 1000 + location;
 
-        let whitePieces = gameBoard.getAllPiecesOfPlayer(Player.WHITE);
-        num_pieces = whitePieces.length;
-
-
-        for(let i = 0; i < num_pieces; i++)
-        {
-            let position = whitePieces[i].getPosition();
-            let piece_name = whitePieces[i].getImageSource();
-            let img = new Image();
-            img.src = "images/"+piece_name;
-            console.log("Board Visual piece_name ",img.src);
-
-            let location = (position.y * 8) + (position.x);
-            console.log("Piece_name position",location);
-
-            // add img of the piece to the correct location(= correct div id)
-            $(`#board_game div:eq(${location})`).append(img);
-            $(`#board_game div:eq(${location}) img`).attr('id', location.toString());
-
+            let cell = document.getElementById(location.toString());
+            cell.attributes
+            cell.appendChild(img);
         }
     }
 
@@ -93,6 +87,23 @@ class BoardUi {
 
     OneToTwoDimensions(i){
 
+    }
+
+    TransformPosition180(position){
+        let mapping = {
+            0: 7,
+            1: 6,
+            2: 5,
+            3: 4,
+            4: 3,
+            5: 2,
+            6: 1,
+            7: 0,
+        }
+        let x = position.x;
+        let y = mapping[position.y];
+
+        return new Position(x, y);
     }
 
 }
