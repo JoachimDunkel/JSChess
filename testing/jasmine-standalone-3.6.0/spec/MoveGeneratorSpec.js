@@ -7,6 +7,16 @@ describe("MoveGenerator", () => {
         moveGenerator = new MoveGenerator(gameState);
     });
 
+
+    it('Can Take', function () {
+        new TestHelper().createValidBoard(gameState);
+        let pawn = new Piece(Player.BLACK, PieceType.PAWN, Position.fromChessNumbering(FILE.A, 7), "bPawnA7");
+        gameState.board.setPiece(pawn);
+        let rook = gameState.board.getObjAtPosition(new Position(0,0));
+        let move = moveGenerator.generateMovesFor(rook);
+        //invalidate any move contains pawn position...
+    });
+
     it('CanMoveEveryEmptyFieldInSpecificDirection', () => {
         let moveDirection = new Position(0,1);
         let objects = new TestHelper().onlyRookAndPawnOnBoard();

@@ -10,7 +10,7 @@ class ImageSourceProvider {
     }
 
     provideImageFor(playerType, pieceType){
-        var pieces;
+        let pieces;
         if(playerType === Player.WHITE){
             pieces = this.whitePieces;
         }

@@ -238,11 +238,9 @@ describe("PieceMoveIntegrationTestSpec", () => {
         let qf3Tof7MATE = new Move(Qf3, MoveType.DEFAULT,new Position(0,4));
         gameState.update(qf3Tof7MATE);
 
-        spyOn(moveHandler, 'startGameOverEvent');
-
         gameState.setMyColor(Player.BLACK);
-        moveHandler.startTurnInteraction();
-        expect(moveHandler.startGameOverEvent).toHaveBeenCalledWith(GameStatus.LOST);
+        let gameStatus = moveHandler.startTurnInteraction();
+        expect(gameStatus).toBe(GameStatus.LOST);
     });
 
     it('from Chess numbering works', function () {

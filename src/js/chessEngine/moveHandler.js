@@ -9,13 +9,15 @@ class MoveHandler {
 
         //game over
         if(this._gameState.gameStatus !== GameStatus.RUNNING){
-            this.startGameOverEvent(this._gameState.gameStatus);
+            return this._gameState.gameStatus;
         }
 
         //if fifty moves rule its a draw
         if(this._gameState.fiftyMovesCounter >= 50){
-            this.startGameOverEvent(GameStatus.DRAW);
+
+            return this._gameState.gameStatus;
         }
+
 
         this.allPossiblesMovesForPlayer = this._generateAllPossibleMovesForPlayer(this._gameState.myColor);
 
@@ -27,20 +29,16 @@ class MoveHandler {
             else{
                 this._gameState.gameStatus = GameStatus.DRAW;
             }
-            this.startGameOverEvent(this._gameState.gameStatus);
         }
+        return this._gameState.gameStatus;
     }
 
-    startGameOverEvent(gameStatus){
-        console.log("Game is over, its a ", gameStatus);
-        // => show in ui hook
-        // => send signal over server..
-    }
-
-    _lookupMove(moveUserWantsToMake) {
+    lookupMove(userMove) {
+        let from = userMove[0];
+        let to = userMove[1];
         //iterate over every move and see if it fits..
         for (const move of this.allPossiblesMovesForPlayer) {
-            if(move.previousPosition === moveUserWantsToMake.oldPosition && move.newPosition === moveUserWantsToMake.newPosition){
+            if(move.previousPosition.equals(from) && move.newPosition.equals(to)){
                 return move;
             }
         }
@@ -62,23 +60,17 @@ class MoveHandler {
         return possibleMoves;
     }
 
-    askMoveFromUser(){
-        while (BOOL.TRUE){
-            //Await user move. from ui hook here...
-
-            //lets say we want to make a knight move... this should be retrieved from ui.
-            let moveUserWantsToMake = {oldPosition : new Position(1,0), newPosition : new Position(0,2)};
-
-            //look up if we can make this move in our datastructure..
-            let move =  this._lookupMove(moveUserWantsToMake);
-
-            if(move !== null){
-                return move;
+    requestPossibleMovesForPosition(fromPosition){
+        let possibleMovesToMake = [];
+        for (const move of this.allPossiblesMovesForPlayer) {
+            if(move.previousPosition.equals(fromPosition)){
+                possibleMovesToMake.push(move);
             }
-            //re-do until user makes a valid move...
         }
-
+        return possibleMovesToMake;
     }
+
+
 
     _generateValidMovesFor(piece){
         let possibleMoves = this.moveGenerator.generateMovesFor(piece);
