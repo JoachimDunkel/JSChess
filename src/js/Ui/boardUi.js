@@ -34,7 +34,7 @@ class BoardUi {
 
                 cell.addEventListener('click', () =>{
 
-                    this.userClickedMoveHandler.handleUserClickEvent(cell.id, new Position(i,j))
+                    this.userClickedMoveHandler.handleUserClickEvent(cell.id, new Position(j,i))
                 });
                 $("#board_game").append(cell);
 
@@ -72,9 +72,9 @@ class BoardUi {
 
             let uiPosition = position;
             if(rotate){
-                uiPosition = this.TransformPosition180(position);
+                uiPosition = Util.TransformPosition180(position);
             }
-            let location = this.TwoToOneDimension(uiPosition);
+            let location = Util.TwoToOneDimension(uiPosition);
             console.log("Piece_name_b position",location);
 
             console.log("position " + uiPosition);
@@ -157,30 +157,5 @@ class BoardUi {
         //     }
         // });
         // $(' div').not(' div:empty').droppable();
-    }
-
-    TwoToOneDimension(position){
-        return (position.y * 8) + (position.x);
-    }
-
-    OneToTwoDimensions(i){
-
-    }
-
-    TransformPosition180(position){
-        let mapping = {
-            0: 7,
-            1: 6,
-            2: 5,
-            3: 4,
-            4: 3,
-            5: 2,
-            6: 1,
-            7: 0,
-        }
-        let x = position.x;
-        let y = mapping[position.y];
-
-        return new Position(x, y);
     }
 }

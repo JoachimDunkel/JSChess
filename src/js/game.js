@@ -36,6 +36,15 @@ class Game {
     }
 
     tryMakeMove(moveUserWantsToMake){
+        let from = moveUserWantsToMake[0];
+        let to = moveUserWantsToMake[1];
+        if(this.gameState.myColor === Player.WHITE){
+
+            let rotatedFrom = Util.TransformPosition180(from);
+            let rotatedTo = Util.TransformPosition180(to);
+            moveUserWantsToMake = [rotatedFrom, rotatedTo];
+        }
+
         let move = this.moveHandler.lookupMove(moveUserWantsToMake);
 
         if(move !== null){
