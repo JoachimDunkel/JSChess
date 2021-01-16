@@ -39,6 +39,7 @@ class Game {
 
         if(move !== null){
             this.gameState.update(move);
+            play();
         }
 
         //This is is not needed if server is up user the out-commented comment then

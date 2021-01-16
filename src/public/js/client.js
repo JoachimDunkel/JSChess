@@ -1,6 +1,7 @@
 let clID = null;
 let gameID = null;
 let currentColor = null;
+let initValues = null;
 let ws = new WebSocket("ws://localhost:8080");
 
 const newGameBtn = document.getElementById("newGameBtn");
@@ -27,6 +28,18 @@ newGameBtn.addEventListener("click", e => {
     ws.send(JSON.stringify(payload));
 })
 
+function play() {
+    // console.log("Game State: " + JSON.stringify(gameObj.gameState));
+    const payload = {
+        "method": "play",
+        "clientID": clID,
+        "gameID": gameID,
+        "gameState": initValues[0].gameState
+    }
+    ws.send(JSON.stringify(payload));
+}
+
+
 ws.onmessage = message => {
     const msg = JSON.parse(message.data);
 
@@ -46,25 +59,26 @@ ws.onmessage = message => {
         console.log("Joined game: " + msg.game.id);
         game.players.forEach(c => {
             if (c.clientID === clID) currentColor = c.color;
+            console.log("Color game: " + currentColor);
         })
 
         if (msg.start) {
             document.getElementById("gameID").remove();
-            init();
+            initValues = init();
         }
 
         // console.log("Joined game: " + msg.game.id);
     }
 
     if (msg.method === "update") {
-        // Send new gamestate to the server
+        // Get new gamestate from the server
         // Save the gamestate to the webstorage
-        if (!msg.game.state) return;
-        for (const b of Object.keys(msg.game.state)) {
-            const color = msg.game.state[b];
-            const cellObj = document.getElementById("cell" + b);
-            cellObj.style.backgroundColor = color;
-        }
+        // console.log("Game State: " + JSON.stringify(initValues[0].gameState.board));
+        // Board.fromJsonObject(initValues[0].gameState)
+
+        initValues[0].gameState = msg.gameState;
+        initValues[1].updateBoard(GameState.fromJsonObject(msg.gameState));
+        localStorage.setItem(gameID, initValues[0].gameState);
     }
 
     if (msg.method === "error") {
