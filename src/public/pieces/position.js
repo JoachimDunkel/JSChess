@@ -23,4 +23,11 @@ class Position {
     static fromChessNumbering(file, rank){
         return new Position(file, rank -1);
     }
+
+    static fromJsonObject(object){
+        let position = new Position();
+        position.x = object.x;
+        position.y = object.y;
+        return position;
+    }
 }

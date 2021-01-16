@@ -3,23 +3,15 @@ class Game {
     constructor(connectionHandler) {
         this.connectionHandler = connectionHandler;
         this.gameState = new GameState();
+
+
+
         this.gameState.setMyColor(this.connectionHandler.provideUserColorFromServer());
         this.gameState.fillBoardWithPieces();
 
         this.updateGameStateEvent = new MvcEvent();
         this.gameOverEvent = new MvcEvent();
     }
-
-    // run(){
-    //     if(this.gameState.currentPlayer === this.myPlayerType){
-    //
-    //         // connectionHandler... send update over server..
-    //     }
-    //     else{
-    //         let move = this.connectionHandler.awaitOpponentMove();
-    //         this.gameState.update(move);
-    //     }
-    // }
 
     //if its opponents turn block all view events
     //and wait for move from connectionhandler then update view..
@@ -48,6 +40,8 @@ class Game {
         if(move !== null){
             this.gameState.update(move);
         }
+
+        //This is is not needed if server is up user the out-commented comment then
         //TODO only for debugging
         this.gameState.changeActivePlayer();
         this.startTurn();

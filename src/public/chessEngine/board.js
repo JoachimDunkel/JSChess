@@ -4,7 +4,24 @@ class Board {
         this.initEmptyBoard();
     }
 
-    //Fuck javascript doesn't even have 2D-arrays?
+    static fromJsonObject(object){
+        let board = new Board();
+        board._board = object._board;
+
+        for(let i = 0; i < BoardSize; i++){
+            for(let j = 0; j < BoardSize; j++){
+                let newPiece = null;
+
+                let piece = object._board[i][j];
+                if(piece !== null) {
+                    newPiece = Piece.fromJsonObject(piece);
+                }
+                board._board[i][j] = newPiece;
+            }
+        }
+        return board;
+    }
+
     initEmptyBoard() {
         this._board = [];
         for(let i = 0; i < BoardSize; i++){
@@ -27,39 +44,6 @@ class Board {
 
     getObjAtPosition(Position){
         return this._board[Position.x][Position.y];
-    }
-
-    //movePiece ?
-    //helper function delete later..
-
-    //feel free to change it and make it so the pieces are printed in a good way.
-
-    printBoard(){
-        console.log("Current Board is: ");
-        console.log("==========================================");
-
-        for(let i = 0; i < BoardSize; i++){
-            let row = "| "
-            for(let j = 0; j < BoardSize; j++){
-                let field = this._board[i][j];
-                let toPrint = "";
-                let colorPrefix ="0";
-
-                if(field !== null){
-                    toPrint = field.getType();
-                    if(field.getPlayerType() === Player.WHITE){
-                        colorPrefix = "w";
-                    }
-                    else{
-                        colorPrefix = "b";
-                    }
-                }
-                row += colorPrefix + toPrint + " | ";
-            }
-            console.log(row);
-            console.log("------------------------------------------");
-        }
-        console.log("==========================================");
     }
 
     moveIsOutOfBounds(position) {

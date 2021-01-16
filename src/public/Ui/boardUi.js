@@ -5,9 +5,6 @@ class BoardUi {
     }
 
     initEmptyBoard() {
-        let gray ='gray';
-        let white = "white";
-
         let count = 0;
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
@@ -17,16 +14,16 @@ class BoardUi {
 
                 let colorToUse = "";
                 if(even && !shiftColor){
-                    colorToUse = white;
+                    colorToUse = CellColor.GRAY;
                 }
                 if(!even && !shiftColor){
-                    colorToUse = gray;
+                    colorToUse = CellColor.WHITE;
                 }
                 if(even && shiftColor){
-                    colorToUse = gray;
+                    colorToUse = CellColor.WHITE;
                 }
                 if(!even && shiftColor){
-                    colorToUse = white;
+                    colorToUse = CellColor.GRAY;
                 }
 
                 cell.id = count.toString();
@@ -56,6 +53,18 @@ class BoardUi {
         for (let i = 0; i < 64; i++) {
             let cell = document.getElementById(i.toString());
             while ( cell.firstChild ) cell.removeChild( cell.firstChild );
+        }
+    }
+
+    invertBoardUiCellColoring(){
+        for (let i = 0; i < 64; i++) {
+            let cell = document.getElementById(i.toString());
+            if(cell.className === CellColor.WHITE){
+                cell.className = CellColor.GRAY;
+            }
+            else{
+                cell.className = CellColor.WHITE;
+            }
         }
     }
 

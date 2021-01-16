@@ -14,13 +14,18 @@ class View {
         document.body.appendChild(this.message);
 
         this.boardUi.initEmptyBoard();
+
     }
 
     updateBoard(gameState){
         this.boardUi.clearBoardUi();
 
         let rotate = false;
-        if(gameState.myColor === Player.WHITE) rotate = true;
+        if(gameState.myColor === Player.WHITE) {
+            rotate = true;
+            this.boardUi.invertBoardUiCellColoring();
+        }
+
         this.boardUi.fillBoardUi(gameState.board, rotate);
         console.log("View. Update board was called");
     }

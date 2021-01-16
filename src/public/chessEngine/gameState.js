@@ -1,6 +1,5 @@
 class GameState {
-    currentPlayer;
-    constructor(myColor) {
+    constructor() {
         this.fiftyMovesCounter = 0;
         this.halfMoveCounter = 0;
 
@@ -9,7 +8,6 @@ class GameState {
 
         this.whiteKing = null;
         this.blackKing = null;
-
 
         this.board = new Board();
 
@@ -25,9 +23,41 @@ class GameState {
         this.gameStatus = GameStatus.RUNNING;
     }
 
+    static fromJsonObject(object){
+        let gameState = new GameState();
+        gameState.fiftyMovesCounter = object.fiftyMovesCounter;
+        gameState.halfMoveCounter = object.halfMoveCounter;
+        gameState.whiteIsInCheck = object.whiteIsInCheck;
+        gameState.blackIsInCheck = object.blackIsInCheck;
+        gameState.myColor = object.myColor;
+        gameState.opponentColor = object.opponentColor;
+        gameState.castlePermissions = object.castlePermissions;
+        gameState.gameStatus = object.gameStatus;
+
+        gameState.board = Board.fromJsonObject(object.board);
+
+        let whiteKingPosition = object.whiteKing._position;
+        let blackKingPosition = object.blackKing._position;
+        gameState.whiteKing = gameState.board.getObjAtPosition(whiteKingPosition);
+        gameState.blackKing = gameState.board.getObjAtPosition(blackKingPosition);
+
+        if(object.lastMoveMade !== null){
+            gameState.lastMoveMade = Move.fromJsonObject(object.lastMoveMade);
+        }
+
+        let allMovesMade = [];
+        for (const moveMade of object.allMovesMade) {
+            let move = Move.fromJsonObject(moveMade);
+            allMovesMade.push(move);
+        }
+        gameState.allMovesMade = allMovesMade;
+
+        return gameState;
+    }
+
     setMyColor(myColor){
         this.myColor = myColor;
-        this.opponenColor = Player.BLACK
+        this.opponentColor = Player.BLACK
         if(this.myColor === Player.BLACK){
             this.opponenColor = Player.WHITE;
         }
@@ -73,7 +103,7 @@ class GameState {
         }
 
         let field = this.board.getObjAtPosition(move.newPosition);
-        if(field !== null && field.getPlayerType() === this.opponenColor){
+        if(field !== null && field.getPlayerType() === this.opponentColor){
             this.fiftyMovesCounter = 0;
         }
 
@@ -86,7 +116,7 @@ class GameState {
     }
 
     invalidateOpponentInCheck(move){
-        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheckOn(move, this.opponenColor);
+        let opponentNowInCheck = new MoveValidator(this).moveLeadsToCheckOn(move, this.opponentColor);
         if(opponentNowInCheck){
             this.setOpponentInCheck();
         }
@@ -241,26 +271,6 @@ class GameState {
         }
         else{
             this.blackIsInCheck = false;
-        }
-    }
-
-    //TODO delete this two maybe if we do not need them at all..
-    setIamInCheck(){
-        if(this.myColor === Player.WHITE){
-            this.whiteIsInCheck = true;
-        }
-        else{
-            this.blackIsInCheck = true;
-        }
-    }
-
-
-    setOpponentOufOfCheck(){
-        if(this.myColor === Player.WHITE){
-            this.blackIsInCheck = false;
-        }
-        else{
-            this.whiteIsInCheck = false;
         }
     }
 }
