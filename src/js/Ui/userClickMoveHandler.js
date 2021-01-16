@@ -18,6 +18,9 @@ class UserClickMoveHandler {
     handleUserClickEvent(cellId, position){
         if(!this.userHasAlreadyClickedCell){
             if(this.userClickedOwnPiece(position)){
+                if(select_sound.mute!==true) {
+                    select_sound.play();
+                }
                 this.fromCellId = cellId;
                 this.fromPosition = position;
                 this.userHasAlreadyClickedCell = true;
@@ -86,11 +89,13 @@ class UserClickMoveHandler {
     }
 
     userClickedOwnPiece(position) {
+
         this.askAllMyPiecePositions.trigger();
         let ownPiecePositions = this.askAllMyPiecePositions.result;
         for (const piecePosition of ownPiecePositions) {
             if(position.equals(piecePosition)){
                 return true;
+
             }
         }
         return false;
