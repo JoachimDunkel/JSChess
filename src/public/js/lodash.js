@@ -3,7 +3,7 @@
  * Lodash <https://lodash.com/>
  * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
  * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Based on Underscore.public 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  */
 ;(function() {
@@ -18,7 +18,7 @@
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
-  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
+  var CORE_ERROR_TEXT = 'Unsupported core-public use. Try https://npms.io/search?q=ponyfill.',
       FUNC_ERROR_TEXT = 'Expected a function';
 
   /** Used to stand-in for `undefined` hash values. */
@@ -412,7 +412,7 @@
   var freeParseFloat = parseFloat,
       freeParseInt = parseInt;
 
-  /** Detect free variable `global` from Node.js. */
+  /** Detect free variable `global` from Node.public. */
   var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
 
   /** Detect free variable `self`. */
@@ -430,25 +430,25 @@
   /** Detect the popular CommonJS extension `module.exports`. */
   var moduleExports = freeModule && freeModule.exports === freeExports;
 
-  /** Detect free variable `process` from Node.js. */
+  /** Detect free variable `process` from Node.public. */
   var freeProcess = moduleExports && freeGlobal.process;
 
-  /** Used to access faster Node.js helpers. */
+  /** Used to access faster Node.public helpers. */
   var nodeUtil = (function() {
     try {
-      // Use `util.types` for Node.js 10+.
+      // Use `util.types` for Node.public 10+.
       var types = freeModule && freeModule.require && freeModule.require('util').types;
 
       if (types) {
         return types;
       }
 
-      // Legacy `process.binding('util')` for Node.js < 10.
+      // Legacy `process.binding('util')` for Node.public < 10.
       return freeProcess && freeProcess.binding && freeProcess.binding('util');
     } catch (e) {}
   }());
 
-  /* Node.js helper references. */
+  /* Node.public helper references. */
   var nodeIsArrayBuffer = nodeUtil && nodeUtil.isArrayBuffer,
       nodeIsDate = nodeUtil && nodeUtil.isDate,
       nodeIsMap = nodeUtil && nodeUtil.isMap,
@@ -1400,7 +1400,7 @@
    * lodash.isFunction(lodash.bar);
    * // => true
    *
-   * // Create a suped-up `defer` in Node.js.
+   * // Create a suped-up `defer` in Node.public.
    * var defer = _.runInContext({ 'setTimeout': setImmediate }).defer;
    */
   var runInContext = (function runInContext(context) {
@@ -1422,7 +1422,7 @@
         funcProto = Function.prototype,
         objectProto = Object.prototype;
 
-    /** Used to detect overreaching core-js shims. */
+    /** Used to detect overreaching core-public shims. */
     var coreJsData = context['__core-js_shared__'];
 
     /** Used to resolve the decompiled source of functions. */
@@ -2394,7 +2394,7 @@
             !(skipIndexes && (
                // Safari 9 has enumerable `arguments.length` in strict mode.
                key == 'length' ||
-               // Node.js 0.10 has enumerable non-index properties on buffers.
+               // Node.public 0.10 has enumerable non-index properties on buffers.
                (isBuff && (key == 'offset' || key == 'parent')) ||
                // PhantomJS 2 has enumerable non-index properties on typed arrays.
                (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
@@ -3229,7 +3229,7 @@
     }
 
     /**
-     * The base implementation of `_.isArrayBuffer` without Node.js optimizations.
+     * The base implementation of `_.isArrayBuffer` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -3240,7 +3240,7 @@
     }
 
     /**
-     * The base implementation of `_.isDate` without Node.js optimizations.
+     * The base implementation of `_.isDate` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -3334,7 +3334,7 @@
     }
 
     /**
-     * The base implementation of `_.isMap` without Node.js optimizations.
+     * The base implementation of `_.isMap` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -3415,7 +3415,7 @@
     }
 
     /**
-     * The base implementation of `_.isRegExp` without Node.js optimizations.
+     * The base implementation of `_.isRegExp` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -3426,7 +3426,7 @@
     }
 
     /**
-     * The base implementation of `_.isSet` without Node.js optimizations.
+     * The base implementation of `_.isSet` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -3437,7 +3437,7 @@
     }
 
     /**
-     * The base implementation of `_.isTypedArray` without Node.js optimizations.
+     * The base implementation of `_.isTypedArray` without Node.public optimizations.
      *
      * @private
      * @param {*} value The value to check.
@@ -6043,7 +6043,7 @@
      */
     var getTag = baseGetTag;
 
-    // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.js < 6.
+    // Fallback for data views, maps, sets, and weak maps in IE 11 and promises in Node.public < 6.
     if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
         (Map && getTag(new Map) != mapTag) ||
         (Promise && getTag(Promise.resolve()) != promiseTag) ||
@@ -11900,12 +11900,12 @@
      * Checks if `value` is a pristine native function.
      *
      * **Note:** This method can't reliably detect native functions in the presence
-     * of the core-js package because core-js circumvents this kind of detection.
-     * Despite multiple requests, the core-js maintainer has made it clear: any
+     * of the core-public package because core-public circumvents this kind of detection.
+     * Despite multiple requests, the core-public maintainer has made it clear: any
      * attempt to fix the detection will be obstructed. As a result, we're left
      * with little choice but to throw an error. Unfortunately, this also affects
      * packages, like [babel-polyfill](https://www.npmjs.com/package/babel-polyfill),
-     * which rely on core-js.
+     * which rely on core-public.
      *
      * @static
      * @memberOf _
@@ -14761,7 +14761,7 @@
      *
      * // Use the `source` property to inline compiled templates for meaningful
      * // line numbers in error messages and stack traces.
-     * fs.writeFileSync(path.join(process.cwd(), 'jst.js'), '\
+     * fs.writeFileSync(path.join(process.cwd(), 'jst.public'), '\
      *   var JST = {\
      *     "main": ' + _.template(mainText).source + '\
      *   };\
@@ -14770,7 +14770,7 @@
     function template(string, options, guard) {
       // Based on John Resig's `tmpl` implementation
       // (http://ejohn.org/blog/javascript-micro-templating/)
-      // and Laura Doktorova's doT.js (https://github.com/olado/doT).
+      // and Laura Doktorova's doT.public (https://github.com/olado/doT).
       var settings = lodash.templateSettings;
 
       if (guard && isIterateeCall(string, options, guard)) {
@@ -17084,7 +17084,7 @@
   // Export lodash.
   var _ = runInContext();
 
-  // Some AMD build optimizers, like r.js, check for condition patterns like:
+  // Some AMD build optimizers, like r.public, check for condition patterns like:
   if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
     // Expose Lodash on the global object to prevent errors when Lodash is
     // loaded by a script tag in the presence of an AMD loader.
@@ -17100,7 +17100,7 @@
   }
   // Check for `exports` after `define` in case a build optimizer adds it.
   else if (freeModule) {
-    // Export for Node.js.
+    // Export for Node.public.
     (freeModule.exports = _)._ = _;
     // Export for CommonJS support.
     freeExports._ = _;

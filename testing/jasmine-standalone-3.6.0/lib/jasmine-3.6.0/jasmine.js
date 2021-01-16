@@ -2222,7 +2222,7 @@ getJasmineRequireObj().Env = function(j$) {
 getJasmineRequireObj().JsApiReporter = function(j$) {
   /**
    * @name jsApiReporter
-   * @classdesc {@link Reporter} added by default in `boot.js` to record results for retrieval in javascript code. An instance is made available as `jsApiReporter` on the global object.
+   * @classdesc {@link Reporter} added by default in `boot.public` to record results for retrieval in javascript code. An instance is made available as `jsApiReporter` on the global object.
    * @class
    * @hideconstructor
    */
@@ -3252,7 +3252,7 @@ getJasmineRequireObj().Clock = function() {
   }
 
   /**
-   * Mocks Node.js Timeout class
+   * Mocks Node.public Timeout class
    */
   function FakeTimeout() {}
 
