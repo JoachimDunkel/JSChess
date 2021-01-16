@@ -3,7 +3,7 @@ let gameID = null;
 let currentColor = null;
 let ws = new WebSocket("ws://localhost:8080");
 
-const btnCreate = document.getElementById("btnCreate");
+const newGameBtn = document.getElementById("newGameBtn");
 const btnJoin = document.getElementById("btnJoin");
 const inputGame = document.getElementById("txtGameID");
 
@@ -19,7 +19,7 @@ btnJoin.addEventListener("click", e => {
     ws.send(JSON.stringify(payload));
 })
 
-btnCreate.addEventListener("click", e => {
+newGameBtn.addEventListener("click", e => {
     const payload = {
         "method": "create",
         "clientID": clID
@@ -37,31 +37,23 @@ ws.onmessage = message => {
 
     if (msg.method === "create") {
         gameID = msg.game.id;
+        document.getElementById("gameID").innerText = "Please wait for the other player to join. Your Game ID: " + gameID;
         console.log("New game: " + msg.game.id);
     }
 
     if (msg.method === "join") {
         const game = msg.game;
-
+        console.log("Joined game: " + msg.game.id);
         game.players.forEach(c => {
-
             if (c.clientID === clID) currentColor = c.color;
         })
 
-        const b = document.createElement("button");
-        b.addEventListener("click", e => {
-            b.style.background = currentColor;
-            const payload = {
-                "method": "play",
-                "clientID": clID,
-                "gameID": gameID,
-                "cellID": b.tag,
-                "color": currentColor
-            }
-            ws.send(JSON.stringify(payload));
-        })
+        if (msg.start) {
+            document.getElementById("gameID").remove();
+            init();
+        }
 
-        console.log("Joined game: " + msg.game.id);
+        // console.log("Joined game: " + msg.game.id);
     }
 
     if (msg.method === "update") {
@@ -73,5 +65,9 @@ ws.onmessage = message => {
             const cellObj = document.getElementById("cell" + b);
             cellObj.style.backgroundColor = color;
         }
+    }
+
+    if (msg.method === "error") {
+        document.getElementById("gameID").innerText = "Error! " + msg.text;
     }
 }

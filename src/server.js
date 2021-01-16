@@ -50,27 +50,41 @@ wsServer.on("request", request => {
             const gameID = msg.gameID;
             const game = game_map[gameID];
 
-            if (game.players.length >= 2) {
+            if (game == null) {
+                const payload = {
+                    "method": "error",
+                    "text": "Game doesn't exist"
+                }
+                client_map[clID].connection.send(JSON.stringify(payload))
                 return;
             }
-
+            if (game.players.length === 2) {
+                const payload = {
+                    "method": "error",
+                    "text": "Game already full"
+                }
+                client_map[clID].connection.send(JSON.stringify(payload))
+                return;
+            }
+            console.log("Join method")
             const color = {"0": "White", "1": "Black"}[game.players.length]
             game.players.push({
                 "clientID": clID,
                 "color": color
             })
 
-            if (game.players.length  === 2)
-                updateStates();
-
-            const payload = {
-                "method": "join",
-                "game": game
+            if (game.players.length  === 2) {
+                const payload = {
+                    "method": "join",
+                    "start": true,
+                    "game": game
+                }
+                game.players.forEach(c => {
+                    client_map[c.clientID].connection.send(JSON.stringify(payload))
+                })
             }
 
-            game.players.forEach(c => {
-                client_map[c.clientID].connection.send(JSON.stringify(payload))
-            })
+
         }
 
         if (msg.method === "play") {

@@ -13,13 +13,13 @@
 <div>
     <button id="newGameBtn">New Game</button>
 </div>
+<div id='gameID'></div>
 <div id="JoinGameDialogue">
     <br/>
 
     <button type="button" id="joinGameBtn">Join game</button>
 </div>
 
-<button id = 'btnCreate'>New Game</button>
 <button id = 'btnJoin'>Join Game</button>
 <input type='text' id='txtGameID'>
 <div id='divPlayers'></div>
@@ -67,6 +67,8 @@
 <script src="chessEngine/board.js"></script>
 <script src="js/defs.js"></script>
 <script src="js/main.js"></script>
+<script src="js/client.js"></script>
+
 <script src="audio_clips/audioClips.js"></script>
 <script>
     var checkMusic=document.querySelector('input[value="mute"]');
@@ -85,7 +87,7 @@
             if(click_sound.mute!==true) {
                 click_sound.play();
             }
-            init();
+            // init();
         }
     var checkSoundEffects=document.querySelector('input[value="mute_all"]');
     checkSoundEffects.addEventListener('change',()=> {
