@@ -23,6 +23,12 @@ class MoveGenerator {
         }
     }
     _createKingMoves(piece){
+        //TODO bug! if we see the board from the black perspective then the king and the queen positions need to be
+        //inverted. that would mean that both castling directions do not work anymore...
+        //leave it for now..
+        //This is a fix that should be done in the ui layer obviously and not here..
+        //if black player invert black and white castling rights from ui layer to engine ...
+
         let possibleMoves = [
             new Move(piece,MoveType.DEFAULT, new Position(-1,1)),
             new Move(piece,MoveType.DEFAULT,new Position(-1,0)),
