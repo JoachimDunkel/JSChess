@@ -31,6 +31,11 @@ class Piece {
         return new Piece(piece.getPlayerType(), piece.getType(), piece.getPosition(),  piece.getImageSource());
     }
 
+    static fromJsonObject(object){
+        let position = Position.fromJsonObject(object._position);
+        return new Piece(object._playerType, object._type, position, object._imageSource);
+    }
+
     equals(piece){
         if(this.getPlayerType() !== piece.getPlayerType()){
             return false;

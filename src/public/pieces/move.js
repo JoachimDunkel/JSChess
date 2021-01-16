@@ -7,6 +7,13 @@ class Move {
         this.previousPosition = piece.getPosition();
     }
 
+    static fromJsonObject(object){
+        let piece = Piece.fromJsonObject(object.piece);
+        let newPosition = Position.fromJsonObject(object.newPosition);
+        let previousPosition = Position.fromJsonObject(object.previousPosition);
+        return new Move(piece, object.moveType, newPosition, previousPosition);
+    }
+
     getRookMoveForCastling(board){
         if(this.moveType !== MoveType.CASTLE) return null;
         //find out the correct rook.
