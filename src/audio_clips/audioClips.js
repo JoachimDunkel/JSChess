@@ -26,6 +26,4 @@ class Sound {
 
 let music_sound=new Sound("audio_clips/lovepiano.mp3");
 let click_sound=new Sound("audio_clips/click01.wav");
-let endturn_sound=new Sound("audio_clips/endturn.wav");
 let select_sound=new Sound("audio_clips/select01.mp3");
-let click02_sound=new Sound("audio_clips/click02.wav");

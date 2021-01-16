@@ -48,6 +48,8 @@ class Game {
         if(move !== null){
             this.gameState.update(move);
         }
+
+        //This is is not needed if server is up user the out-commented comment then
         //TODO only for debugging
         this.gameState.changeActivePlayer();
         this.startTurn();
