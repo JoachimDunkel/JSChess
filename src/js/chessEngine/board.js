@@ -6,6 +6,7 @@ class Board {
 
     //Fuck javascript doesn't even have 2D-arrays?
     initEmptyBoard() {
+
         this._board = [];
         for(let i = 0; i < BoardSize; i++){
             this._board[i] = [];

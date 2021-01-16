@@ -178,6 +178,7 @@ class GameState {
     }
 
     changeActivePlayer(){
+
         if(this.myColor === Player.WHITE){
             this.setMyColor(Player.BLACK);
         }

@@ -14,6 +14,7 @@ function init() {
 	let view = new View();
 	let controller = new Controller(view, game);
 
+
 	controller.run();
 	console.log("Finished main");
 

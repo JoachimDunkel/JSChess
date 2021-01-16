@@ -11,7 +11,7 @@
     <h3>JS Chess</h3>
 </header>
 <div>
-    <button id="newGameBtn" onclick="init();">New Game</button>
+    <button id="newGameBtn">New Game</button>
 </div>
 <div id="JoinGameDialogue">
     <br/>
@@ -20,6 +20,17 @@
 </div>
 
 <div id="board_game"></div>
+
+<div>
+    <input type="checkbox" id="mute" name="mute" value="mute" checked>
+    <label for="mute">MUTE</label>
+</div>
+
+<div>
+    <input type="checkbox" id="mute_all" name="mute_all" value="mute_all">
+    <label for="mute_all">Mute Sound Effects</label>
+</div>
+
 
 <script src="js/Ui/boardUi.js"></script>
 <script src="js/util.js"></script>
@@ -49,9 +60,41 @@
 <script src="js/chessEngine/board.js"></script>
 <script src="js/defs.js"></script>
 <script src="js/main.js"></script>
+<script src="audio_clips/audioClips.js"></script>
+<script>
+    var checkMusic=document.querySelector('input[value="mute"]');
+    checkMusic.addEventListener('change',()=>{
+            if(checkMusic.checked)
+                {
+                    music_sound.stop();
+                }
+            else
+                {
+                    music_sound.play();
+                }
+    });
+    let newGameClickSound=document.getElementById("newGameBtn").onclick=
+        function (){
+            if(click_sound.mute!==true) {
+                click_sound.play();
+            }
+            init();
+        }
+    var checkSoundEffects=document.querySelector('input[value="mute_all"]');
+    checkSoundEffects.addEventListener('change',()=> {
+        if (checkSoundEffects.checked) {
+            click_sound.mute = true;
+            select_sound.mute = true;
+            click02_sound.mute = true;
+        }
+        else{
+            click_sound.mute = false;
+            select_sound.mute = false;
+            click02_sound.mute = false;
+        }
+    });
 
-
-
+</script>
 
 
 

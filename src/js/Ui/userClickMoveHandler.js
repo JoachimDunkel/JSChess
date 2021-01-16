@@ -18,6 +18,9 @@ class UserClickMoveHandler {
     handleUserClickEvent(cellId, position){
         if(!this.userHasAlreadyClickedCell){
             if(this.userClickedOwnPiece(position)){
+                if(select_sound.mute!==true) {
+                    select_sound.play();
+                }
                 this.fromCellId = cellId;
                 this.fromPosition = position;
                 this.userHasAlreadyClickedCell = true;
@@ -25,6 +28,9 @@ class UserClickMoveHandler {
                 this.highlightPossibleMoves(this.fromPosition);
             }
             else{
+                if(click02_sound.mute!==true) {
+                    click02_sound.play();
+                }
                 this.reset();
             }
         }
@@ -86,11 +92,13 @@ class UserClickMoveHandler {
     }
 
     userClickedOwnPiece(position) {
+
         this.askAllMyPiecePositions.trigger();
         let ownPiecePositions = this.askAllMyPiecePositions.result;
         for (const piecePosition of ownPiecePositions) {
             if(position.equals(piecePosition)){
                 return true;
+
             }
         }
         return false;
