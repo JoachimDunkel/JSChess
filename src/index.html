@@ -3,41 +3,57 @@
 <head>
     <meta charset="utf-8">
     <title>JSChess</title>
-    <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>
+<!--    <script type="text/javascript"> if (!window.console) console = {log: function() {}}; </script>-->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
     <h3>JS Chess</h3>
 </header>
-<div id="FenInDiv">
-    Fen:<br/>
-    <input type="text" id="fenIn"/>
-    <button type="button" id="SetFen">Set Position</button>
+<div>
+    <button id="newGameBtn" onclick="init();">New Game</button>
+</div>
+<div id="JoinGameDialogue">
+    <br/>
+
+    <button type="button" id="joinGameBtn">Join game</button>
 </div>
 
-<button id = 'btnCreate'>New Game</button>
-<button id = 'btnJoin'>Join Game</button>
-<input type='text' id='txtGameID'>
-<div id='divPlayers'></div>
-<div id='divBoard'></div>
+<div id="board_game"></div>
 
-<script src="pieces/piece.js"></script>
-<script src="pieces/imageSourceProvider.js"></script>
-<script src="pieces/position.js"></script>
-<script src="pieces/pieceFactory.js"></script>
+<script src="js/Ui/boardUi.js"></script>
+<script src="js/util.js"></script>
 
-<script src="game.js"></script>
-<script src="jquery-1.10.1.min.js"></script>
-<script src="lodash.js"></script>
+<script src="js/Ui/controller.js"></script>
+<script src="js/Ui/mvcEvent.js"></script>
+<script src="js/Ui/view.js"></script>
+<script src="js/Ui/userClickMoveHandler.js"></script>
+<script src="js/Ui/singleReturnEvent.js"></script>
 
-<script src="chessEngine/moveValidator.js"></script>
-<script src="chessEngine/moveHandler.js"></script>
-<script src="connectionHandler.js"></script>
-<script src="chessEngine/checkHandler.js"></script>
-<script src="chessEngine/gameState.js"></script>
-<script src="chessEngine/board.js"></script>
-<script src="defs.js"></script>
-<script src="main.js"></script>
-<script src="client.js"></script>
+<script src="js/pieces/piece.js"></script>
+<script src="js/pieces/imageSourceProvider.js"></script>
+<script src="js/pieces/position.js"></script>
+<script src="js/pieces/pieceFactory.js"></script>
+<script src="js/pieces/move.js"></script>
+
+<script src="js/game.js"></script>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/lodash.js"></script>
+
+<script src="js/chessEngine/moveGenerator.js"></script>
+<script src="js/chessEngine/moveValidator.js"></script>
+<script src="js/chessEngine/moveHandler.js"></script>
+<script src="js/connectionHandler.js"></script>
+<script src="js/chessEngine/checkHandler.js"></script>
+<script src="js/chessEngine/gameState.js"></script>
+<script src="js/chessEngine/board.js"></script>
+<script src="js/defs.js"></script>
+<script src="js/main.js"></script>
+
+
+
+
+
+
 </body>
 </html>
