@@ -1,6 +1,5 @@
 const http = require("http");
 const express = require('express');
-// const path = require("path");
 const { v1: uuidv1 } = require('uuid');
 const app = express();
 
