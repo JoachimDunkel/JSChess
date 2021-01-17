@@ -88,22 +88,6 @@ wsServer.on("request", request => {
     conn.send(JSON.stringify(payload))
 })
 
-
-function updateStates() {
-
-    for (const g of Object.keys(game_map)) {
-        const game = game_map[g];
-        const payload = {
-            "method": "update",
-            "game": game
-        }
-
-        game.players.forEach(c => {
-            client_map[c.clientID].connection.send(JSON.stringify(payload));
-        })
-    }
-}
-
 function gameJoin(msg) {
     const clID = msg.clientID;
     const gameID = msg.gameID;
@@ -159,6 +143,4 @@ function gameJoin(msg) {
             client_map[c.clientID].connection.send(JSON.stringify(payload))
         })
     }
-
-
 }
