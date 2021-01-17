@@ -5,8 +5,7 @@ $( document ).ready(function() {
 
 function init(white) {
 
-	let connectionHandler = new ConnectionHandler();
-	let game = new Game(connectionHandler);
+	let game = new Game();
 
 	let view = new View();
 	let controller = new Controller(view, game);

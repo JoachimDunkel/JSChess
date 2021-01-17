@@ -91,7 +91,8 @@ ws.onmessage = message => {
         let gameState = GameState.fromJsonObject(msg.gameState);
         gameObject.gameState = gameState;
         gameObject.updateGameStateEvent.trigger(gameState);
-        localStorage.setItem(gameID, gameObject.gameState);
+        let toJson = JSON.stringify(gameObject.gameState);
+        localStorage.setItem(gameID, toJson);
         activeTurn = true;
         gameObject.startTurn();
     }

@@ -7,14 +7,16 @@ class View {
         this.boardUi = new BoardUi(this.userClickMoveHandler);
     }
 
-    initUi(){
+    initUi(isWhite){
 
         this.message = document.createElement('div');
         this.message.className = 'message';
         document.body.appendChild(this.message);
 
         this.boardUi.initEmptyBoard();
-
+        if(isWhite){
+            this.boardUi.invertBoardUiCellColoring();
+        }
     }
 
     updateBoard(gameState){
@@ -23,9 +25,7 @@ class View {
         let rotate = false;
         if(gameState.myColor === Player.WHITE) {
             rotate = true;
-            this.boardUi.invertBoardUiCellColoring();
         }
-
         this.boardUi.fillBoardUi(gameState.board, rotate);
         console.log("View. Update board was called");
     }

@@ -1,10 +1,7 @@
 
 class Game {
-    constructor(connectionHandler) {
-        this.connectionHandler = connectionHandler;
+    constructor() {
         this.gameState = new GameState();
-
-
 
         this.gameState.setMyColor(getColor());
         this.gameState.fillBoardWithPieces();
