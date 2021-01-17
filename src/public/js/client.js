@@ -34,6 +34,7 @@ newGameBtn.addEventListener("click", e => {
 
 function play() {
     activeTurn = false;
+    document.getElementById("gameID").innerText = "Opponent's turn";
     const payload = {
         "method": "play",
         "clientID": clID,
@@ -55,7 +56,25 @@ ws.onmessage = message => {
 
     if (msg.method === "create") {
         gameID = msg.game.id;
-        document.getElementById("gameID").innerText = "Please wait for the other player to join. Your Game ID: " + gameID;
+
+        const inp = document.createElement("input");
+        inp.className = "inputID";
+        inp.id = "inputID"
+        inp.type = "text";
+        inp.value = gameID;
+
+        const b = document.createElement("button");
+        b.className = "buttonID";
+        b.id = "buttonID"
+        b.textContent = "Copy";
+        b.onclick = copy;
+
+        let parent = document.getElementById("gameID");
+        parent.innerText = "Please wait for the other player to join. Your Game ID: ";
+        parent.appendChild(inp);
+        parent.appendChild(b);
+
+
         console.log("New game: " + msg.game.id);
     }
 
@@ -68,11 +87,16 @@ ws.onmessage = message => {
         })
 
         if (msg.start) {
-            document.getElementById("gameID").remove();
+            document.getElementById("newGameBtn").remove();
+            document.getElementById("btnJoin").remove();
+            document.getElementById("txtGameID").remove();
+            document.getElementById("storage").remove();
+            document.getElementById("gameID").innerText = "Game Started, it's opponent's turn";
             let white;
             if (currentColor === "White") {
                 white = true;
                 activeTurn = true;
+                document.getElementById("gameID").innerText = "Game Started, it's your turn";
             } else {
                 white = false;
             }
@@ -95,6 +119,7 @@ ws.onmessage = message => {
         localStorage.setItem(gameID, msg.gameState);
         console.log("Color: " + gameObject.gameState.myColor);
         activeTurn = true;
+        document.getElementById("gameID").innerText = "Your Turn";
         gameObject.startTurn();
     }
 

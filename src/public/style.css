@@ -69,3 +69,33 @@ h3 {
     font-size: 18px;
     padding: 5px;
 }
+
+.buttonID {
+    background-color: #666666;
+    color: #bcbcbc;
+    border-radius: 4px;
+    font-size: 18px;
+    margin-bottom: 30px;
+    margin-right: 20px;
+    padding: 3px;
+}
+
+.inputID {
+    background-color: #666666;
+    color: #bcbcbc;
+    border-radius: 4px;
+    font-size: 18px;
+    margin-bottom: 30px;
+    margin-right: 20px;
+    padding: 3px;
+}
+
+nav ul {
+    height:200px;
+    width:30%;
+    background-color: #666666;
+}
+nav ul {
+    overflow:hidden;
+    overflow-y:scroll;
+}
