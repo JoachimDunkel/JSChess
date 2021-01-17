@@ -7,27 +7,29 @@ class View {
         this.boardUi = new BoardUi(this.userClickMoveHandler);
     }
 
-    initUi(){
+    initUi(isWhite){
 
         this.message = document.createElement('div');
         this.message.className = 'message';
         document.body.appendChild(this.message);
 
         this.boardUi.initEmptyBoard();
-
+        if(isWhite){
+            this.boardUi.invertBoardUiCellColoring();
+        }
     }
 
     updateBoard(gameState){
         this.boardUi.clearBoardUi();
 
-        let rotate = false;
-        if(gameState.myColor === Player.WHITE) {
-            rotate = true;
+        if(gameState.myColor === Player.WHITE && !getRotated()) {
+            setRotated(true);
+            console.log("Rotate");
             this.boardUi.invertBoardUiCellColoring();
         }
 
-        this.boardUi.fillBoardUi(gameState.board, rotate);
-        console.log("View. Update board was called");
+        this.boardUi.fillBoardUi(gameState.board, getRotated());
+
     }
 
     gameOver(gameStatus){

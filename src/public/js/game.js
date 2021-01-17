@@ -1,12 +1,9 @@
 
 class Game {
-    constructor(connectionHandler) {
-        this.connectionHandler = connectionHandler;
+    constructor() {
         this.gameState = new GameState();
 
-
-
-        this.gameState.setMyColor(this.connectionHandler.provideUserColorFromServer());
+        this.gameState.setMyColor(getColor());
         this.gameState.fillBoardWithPieces();
 
         this.updateGameStateEvent = new MvcEvent();
@@ -15,7 +12,7 @@ class Game {
 
     //if its opponents turn block all view events
     //and wait for move from connectionhandler then update view..
-    startTurn(){
+    startTurn() {
         this.moveHandler = new MoveHandler(this.gameState);
         let gameStatus = this.moveHandler.startTurnInteraction();
         if(gameStatus !== GameStatus.RUNNING){
@@ -37,17 +34,18 @@ class Game {
 
         let move = this.moveHandler.lookupMove(moveUserWantsToMake);
 
-        if(move !== null){
-            this.gameState.update(move);
-            play();
+        if(move == null){
+            return;
         }
+        this.gameState.update(move);
+        play();
 
         //This is is not needed if server is up user the out-commented comment then
         //TODO only for debugging
-        this.gameState.changeActivePlayer();
-        this.startTurn();
+        // this.gameState.changeActivePlayer();
+        // this.startTurn();
 
-        //this.updateGameStateEvent.trigger(this.gameState);
+        this.updateGameStateEvent.trigger(this.gameState);
     }
 
     gameOver(gameStatus){

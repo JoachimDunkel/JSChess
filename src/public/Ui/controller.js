@@ -15,8 +15,15 @@ class Controller {
         this._game.gameOverEvent.addListener(gameStatus => {this._view.gameOver(gameStatus)});
     }
 
-    run(){
+    run(white){
         this._view.initUi();
-        this._game.startTurn();
+
+        if (white) {
+            this._game.startTurn();
+            this._game.gameState.setMyColor(Player.WHITE);
+        } else {
+            this._game.gameState.setMyColor(Player.BLACK);
+            this._game.updateGameStateEvent.trigger(this._game.gameState);
+        }
     }
 }

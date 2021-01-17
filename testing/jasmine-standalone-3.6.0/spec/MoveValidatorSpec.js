@@ -109,7 +109,7 @@ describe("MoveValidator", () =>{
 
         let move = new Move(rook, MoveType.DEFAULT, new Position(0,7));
 
-        let moveLeadsToCheck = moveValidator.moveLeadsToCheckOn(move, gameState.opponenColor);
+        let moveLeadsToCheck = moveValidator.moveLeadsToCheckOn(move, gameState.opponentColor);
 
         expect(moveLeadsToCheck).toBeTrue();
     });

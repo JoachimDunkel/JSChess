@@ -21,6 +21,8 @@ class GameState {
         this.allMovesMade = [];
 
         this.gameStatus = GameStatus.RUNNING;
+
+        this.rotated = false;
     }
 
     static fromJsonObject(object){
@@ -59,7 +61,7 @@ class GameState {
         this.myColor = myColor;
         this.opponentColor = Player.BLACK
         if(this.myColor === Player.BLACK){
-            this.opponenColor = Player.WHITE;
+            this.opponentColor = Player.WHITE;
         }
     }
 
