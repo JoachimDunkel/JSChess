@@ -22,12 +22,14 @@ class View {
     updateBoard(gameState){
         this.boardUi.clearBoardUi();
 
-        let rotate = false;
-        if(gameState.myColor === Player.WHITE) {
-            rotate = true;
+        if(gameState.myColor === Player.WHITE && !getRotated()) {
+            setRotated(true);
+            console.log("Rotate");
+            this.boardUi.invertBoardUiCellColoring();
         }
-        this.boardUi.fillBoardUi(gameState.board, rotate);
-        console.log("View. Update board was called");
+
+        this.boardUi.fillBoardUi(gameState.board, getRotated());
+
     }
 
     gameOver(gameStatus){

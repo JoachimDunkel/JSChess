@@ -14,7 +14,7 @@
     <button class="button" id="newGameBtn">New Game</button>
     <br/>
 </div>
-<div class="text" id='gameID' >Create or join a game</div>
+<div class="text" id='gameID' ondrop="drop(ev)" ondragover="allowDrop(ev)">Create or join a game</div>
 <div id="JoinGameDialogue">
     <br/>
     <button class="button" id='btnJoin'>Join Game</button>
@@ -33,6 +33,7 @@
     <label class="text" for="mute_all">Mute Sound Effects</label>
 </div>
 
+<div id="storage"></div>
 
 <script src="Ui/boardUi.js"></script>
 <script src="js/util.js"></script>
@@ -62,9 +63,10 @@
 <script src="js/defs.js"></script>
 <script src="js/main.js"></script>
 <script src="js/client.js"></script>
+<script src="js/page.js"></script>
 
 <script src="audio_clips/audioClips.js"></script>
-<script src="audio_clips/mute.js"></script>
+<script src="audio_clips/sound.js"></script>
 
 </body>
 </html>

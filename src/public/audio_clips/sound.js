@@ -14,7 +14,13 @@ document.getElementById("newGameBtn").onclick=
         if(click_sound.mute!==true) {
             click_sound.play();
         }
-        // init();
+    }
+
+document.getElementById("btnJoin").onclick=
+    function () {
+        if(!click_sound.mute) {
+            click_sound.play();
+        }
     }
 let checkSoundEffects=document.querySelector('input[value="mute_all"]');
 checkSoundEffects.addEventListener('change',()=> {

@@ -21,6 +21,8 @@ class GameState {
         this.allMovesMade = [];
 
         this.gameStatus = GameStatus.RUNNING;
+
+        this.rotated = false;
     }
 
     static fromJsonObject(object){
