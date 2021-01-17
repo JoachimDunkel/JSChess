@@ -11,6 +11,8 @@ let ws = new WebSocket("ws://localhost:8080");
 const newGameBtn = document.getElementById("newGameBtn");
 const btnJoin = document.getElementById("btnJoin");
 const inputGame = document.getElementById("txtGameID");
+const btnLoad = document.getElementById("btnLoad");
+const loadGame = document.getElementById("txtLoadID");
 
 btnJoin.addEventListener("click", e => {
     if (!gameID) {
@@ -31,6 +33,22 @@ newGameBtn.addEventListener("click", e => {
     }
     ws.send(JSON.stringify(payload));
 })
+
+btnLoad.addEventListener("click", e => {
+    if (!gameID) {
+        gameID = loadGame.value;
+        if (!gameID)
+            return;
+    }
+    const payload = {
+        "method": "load",
+        "clientID": clID,
+        "gameID": gameID,
+        "gameState": localStorage.getItem(gameID)
+    }
+    ws.send(JSON.stringify(payload));
+})
+
 
 function play() {
     activeTurn = false;
@@ -101,6 +119,23 @@ ws.onmessage = message => {
             let init_obj = init(white);
             gameObject = init_obj[0];
             viewObject = init_obj[1];
+            console.log("WHERE: ");
+            // if (msg.gameState) {
+            //
+            //     let gameState = GameState.fromJsonObject(msg.gameState);
+            //     gameObject.gameState = gameState;
+            //
+            //     if (currentColor === "White") {
+            //         gameObject.gameState.setMyColor(Player.WHITE);
+            //         gameObject.startTurn();
+            //     } else {
+            //         gameObject.gameState.setMyColor(Player.BLACK);
+            //     }
+            //     gameObject.updateGameStateEvent.trigger(gameState);
+            //     console.log("Color: " + gameObject.gameState.myColor);
+            //
+            // }
+            console.log("WHERE: ");
         }
     }
 

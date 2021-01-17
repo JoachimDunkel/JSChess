@@ -72,6 +72,35 @@ wsServer.on("request", request => {
                     client_map[c.clientID].connection.send(JSON.stringify(payload))
             })
         }
+
+        if (msg.method === "load") {
+            const clID = msg.clientID;
+            const gameID = msg.gameID;
+
+            delete game_map[gameID];
+
+            game_map[gameID] = {
+                "id": gameID,
+                "players": [],
+                "gameState": msg.gameState
+            }
+
+            const payload = {
+                "method": "create",
+                "game": game_map[gameID]
+            }
+            console.log("Cl = " + clID + " " + client_map[clID]);
+            const cl_connection = client_map[clID].connection;
+            cl_connection.send(JSON.stringify(payload));
+
+            const forJoin = {
+                "method": "join",
+                "clientID": clID,
+                "gameID": game_map[gameID].id,
+                "gameState": msg.gameState
+            }
+            gameJoin(forJoin);
+        }
     })
 
     const clID = uuidv1();
@@ -92,6 +121,9 @@ function gameJoin(msg) {
     const clID = msg.clientID;
     const gameID = msg.gameID;
     const game = game_map[gameID];
+    let state = null;
+    if (msg.gameState)
+        state = msg.gameState;
 
     if (game == null) {
         const payload = {
@@ -137,8 +169,9 @@ function gameJoin(msg) {
         const payload = {
             "method": "join",
             "start": true,
-            "game": game
+            "game": game,
         }
+        console.log("Join method1")
         game.players.forEach(c => {
             client_map[c.clientID].connection.send(JSON.stringify(payload))
         })
