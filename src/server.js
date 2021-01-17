@@ -43,50 +43,34 @@ wsServer.on("request", request => {
             console.log("Cl = " + clID + " " + client_map[clID]);
             const cl_connection = client_map[clID].connection;
             cl_connection.send(JSON.stringify(payload));
+
+            const forJoin = {
+                "method": "join",
+                "clientID": clID,
+                "gameID": game_map[gameID].id
+            }
+            gameJoin(forJoin);
         }
 
         if (msg.method === "join") {
-            const clID = msg.clientID;
-            const gameID = msg.gameID;
-            const game = game_map[gameID];
-
-            if (game.players.length >= 2) {
-                return;
-            }
-
-            const color = {"0": "White", "1": "Black"}[game.players.length]
-            game.players.push({
-                "clientID": clID,
-                "color": color
-            })
-
-            if (game.players.length  === 2)
-                updateStates();
-
-            const payload = {
-                "method": "join",
-                "game": game
-            }
-
-            game.players.forEach(c => {
-                client_map[c.clientID].connection.send(JSON.stringify(payload))
-            })
+            gameJoin(msg);
         }
 
         if (msg.method === "play") {
             const clID = msg.clientID;
             const gameID = msg.gameID;
-            const cellID = msg.cellID;
-            const color = msg.color;
+            const currentState = msg.gameState;
 
-            let state = game_map[gameID].state;
+            const payload = {
+                "method": "update",
+                "clientID": clID,
+                "gameState": currentState
+            }
 
-            if (!state)
-                state = {};
-
-            state[cellID] = color;
-            game_map[gameID].state = state;
-            updateStates();
+            game_map[gameID].players.forEach(c => {
+                if (c.clientID !== clID)
+                    client_map[c.clientID].connection.send(JSON.stringify(payload))
+            })
         }
     })
 
@@ -118,4 +102,63 @@ function updateStates() {
             client_map[c.clientID].connection.send(JSON.stringify(payload));
         })
     }
+}
+
+function gameJoin(msg) {
+    const clID = msg.clientID;
+    const gameID = msg.gameID;
+    const game = game_map[gameID];
+
+    if (game == null) {
+        const payload = {
+            "method": "error",
+            "text": "Game doesn't exist"
+        }
+        client_map[clID].connection.send(JSON.stringify(payload))
+        return;
+    }
+    if (game.players.length === 2) {
+        const payload = {
+            "method": "error",
+            "text": "Game already full"
+        }
+        client_map[clID].connection.send(JSON.stringify(payload))
+        return;
+    }
+
+    let inGame = false;
+    for (let i = 0; i < game.players.length; i++) {
+        if (game.players[i].clientID === clID)
+            inGame = true;
+    }
+
+    if (inGame) {
+        const payload = {
+            "method": "error",
+            "text": "Already in game"
+        }
+        client_map[clID].connection.send(JSON.stringify(payload))
+        return;
+    }
+    console.log("Join method")
+
+    const color = {"0": "White", "1": "Black"}[game.players.length]
+
+    game.players.push({
+        "clientID": clID,
+        "color": color
+    })
+
+    if (game.players.length  === 2) {
+        const payload = {
+            "method": "join",
+            "start": true,
+            "game": game
+        }
+        game.players.forEach(c => {
+            client_map[c.clientID].connection.send(JSON.stringify(payload))
+        })
+    }
+
+
 }

@@ -11,31 +11,26 @@
     <h3>JS Chess</h3>
 </header>
 <div>
-    <button id="newGameBtn">New Game</button>
+    <button class="button" id="newGameBtn">New Game</button>
+    <br/>
 </div>
+<div class="text" id='gameID'></div>
 <div id="JoinGameDialogue">
     <br/>
-
-    <button type="button" id="joinGameBtn">Join game</button>
+    <button class="button" id='btnJoin'>Join Game</button>
+    <input class="input" type='text' id='txtGameID' placeholder="Enter the Game ID">
 </div>
-
-<button id = 'btnCreate'>New Game</button>
-<button id = 'btnJoin'>Join Game</button>
-<input type='text' id='txtGameID'>
-<div id='divPlayers'></div>
-<div id='divBoard'></div>
-
 
 <div id="board_game"></div>
 
 <div>
     <input type="checkbox" id="mute" name="mute" value="mute" checked>
-    <label for="mute">MUTE</label>
+    <label class="text" for="mute">Mute Music</label>
 </div>
 
 <div>
     <input type="checkbox" id="mute_all" name="mute_all" value="mute_all">
-    <label for="mute_all">Mute Sound Effects</label>
+    <label class="text" for="mute_all">Mute Sound Effects</label>
 </div>
 
 
@@ -67,38 +62,10 @@
 <script src="chessEngine/board.js"></script>
 <script src="js/defs.js"></script>
 <script src="js/main.js"></script>
+<script src="js/client.js"></script>
+
 <script src="audio_clips/audioClips.js"></script>
-<script>
-    let checkMusic=document.querySelector('input[value="mute"]');
-    checkMusic.addEventListener('change',()=>{
-        if(checkMusic.checked)
-        {
-            music_sound.stop();
-        }
-        else
-        {
-            music_sound.play();
-        }
-    });
-    document.getElementById("newGameBtn").onclick=
-        function (){
-            if(click_sound.mute!==true) {
-                click_sound.play();
-            }
-            init();
-        }
-    let checkSoundEffects=document.querySelector('input[value="mute_all"]');
-    checkSoundEffects.addEventListener('change',()=> {
-        if (checkSoundEffects.checked) {
-            click_sound.mute = true;
-            select_sound.mute = true;
-        }
-        else{
-            click_sound.mute = false;
-            select_sound.mute = false;
-        }
-    });
-</script>
+<script src="audio_clips/mute.js"></script>
 
 </body>
 </html>

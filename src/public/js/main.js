@@ -14,4 +14,5 @@ function init() {
 	controller.run();
 	console.log("Finished main");
 
+	return [game, view];
 }
