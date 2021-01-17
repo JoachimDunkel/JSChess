@@ -1,5 +1,7 @@
 window.onload = function(){
     document.getElementById("txtGameID").value = "";
+    document.getElementById("txtLoadID").value = "";
+    // localStorage.clear();
     storageList();
 }
 

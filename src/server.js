@@ -122,8 +122,8 @@ function gameJoin(msg) {
     const gameID = msg.gameID;
     const game = game_map[gameID];
     let state = null;
-    if (msg.gameState)
-        state = msg.gameState;
+    if (game_map[gameID].gameState)
+        state = game_map[gameID].gameState;
 
     if (game == null) {
         const payload = {
@@ -170,6 +170,7 @@ function gameJoin(msg) {
             "method": "join",
             "start": true,
             "game": game,
+            "gameState": state
         }
         console.log("Join method1")
         game.players.forEach(c => {
