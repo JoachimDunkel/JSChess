@@ -10,8 +10,6 @@ class Game {
         this.gameOverEvent = new MvcEvent();
     }
 
-    //if its opponents turn block all view events
-    //and wait for move from connectionhandler then update view..
     startTurn() {
         this.moveHandler = new MoveHandler(this.gameState);
         let gameStatus = this.moveHandler.startTurnInteraction();

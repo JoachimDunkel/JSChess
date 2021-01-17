@@ -41,7 +41,6 @@ function play() {
         "gameID": gameID,
         "gameState": gameObject.gameState
     }
-    // gameObject.gameState.changeActivePlayer();
     ws.send(JSON.stringify(payload));
 }
 
@@ -74,7 +73,6 @@ ws.onmessage = message => {
         parent.appendChild(inp);
         parent.appendChild(b);
 
-
         console.log("New game: " + msg.game.id);
     }
 
@@ -104,13 +102,9 @@ ws.onmessage = message => {
             gameObject = init_obj[0];
             viewObject = init_obj[1];
         }
-
-        // console.log("Joined game: " + msg.game.id);
     }
 
     if (msg.method === "update") {
-        // Get new gamestate from the server
-        // Save the gamestate to the webstorage
 
         let gameState = GameState.fromJsonObject(msg.gameState);
         gameObject.gameState = gameState;
