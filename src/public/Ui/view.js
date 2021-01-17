@@ -9,9 +9,6 @@ class View {
 
     initUi(isWhite){
 
-        this.message = document.createElement('div');
-        this.message.className = 'message';
-        document.body.appendChild(this.message);
 
         this.boardUi.initEmptyBoard();
         if(isWhite){
@@ -33,10 +30,14 @@ class View {
     }
 
     gameOver(gameStatus){
-        //TODO change message based on gameStatus
-        this.message.innerHTML = '${gameStatus} wins!';
-        console.log("View.game over was triggered");
-        // console.log("Game has ended it's a: ")
-        // console.log(gameStatus);
+        let message = "Congratulation you won!";
+        if(gameStatus === GameStatus.LOST){
+            message = "You lost, better luck next time";
+        }
+        if(gameStatus === GameStatus.DRAW){
+            message = "It's a draw.";
+        }
+
+        alert(message);
     }
 }
