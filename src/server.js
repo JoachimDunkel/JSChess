@@ -49,11 +49,11 @@ wsServer.on("request", request => {
                 "clientID": clID,
                 "gameID": game_map[gameID].id
             }
-            gameJoin(forJoin, false);
+            gameJoin(forJoin);
         }
 
         if (msg.method === "join") {
-            gameJoin(msg,false);
+            gameJoin(msg);
         }
 
         if (msg.method === "play") {
@@ -99,7 +99,7 @@ wsServer.on("request", request => {
                 "gameID": game_map[gameID].id,
                 "gameState": msg.gameState
             }
-            gameJoin(forJoin, true);
+            gameJoin(forJoin);
         }
     })
 
@@ -117,15 +117,11 @@ wsServer.on("request", request => {
     conn.send(JSON.stringify(payload))
 })
 
-function gameJoin(msg, load) {
+function gameJoin(msg) {
     const clID = msg.clientID;
     const gameID = msg.gameID;
     const game = game_map[gameID];
-    let state = null;
-    if (load) {
-        if (game_map[gameID].gameState)
-            state = game_map[gameID].gameState;
-    }
+
     if (game == null) {
         const payload = {
             "method": "error",
@@ -158,6 +154,12 @@ function gameJoin(msg, load) {
         return;
     }
     console.log("Join method")
+
+    let state = null;
+    if (game_map[gameID]) {
+        if (game_map[gameID].gameState)
+            state = game_map[gameID].gameState;
+    }
 
     const color = {"0": "White", "1": "Black"}[game.players.length]
 
