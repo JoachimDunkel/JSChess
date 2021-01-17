@@ -14,11 +14,11 @@
     <button class="button" id="newGameBtn">New Game</button>
     <br/>
 </div>
-<div class="text" id='gameID' ondrop="drop(ev)" ondragover="allowDrop(ev)">Create or join a game</div>
+<div class="text" id='gameID'>Create, join or load a game</div>
 <div id="JoinGameDialogue">
     <br/>
     <button class="button" id='btnJoin'>Join Game</button>
-    <input class="input" type='text' id='txtGameID' placeholder="Enter the Game ID">
+    <input class="input" type='text' id='txtGameID' placeholder="Enter the Game ID to join">
 </div>
 
 <div id="board_game"></div>
@@ -40,6 +40,11 @@
 </div>
 
 <div id="storage"></div>
+<div id="storageLoad">
+    <br/>
+    <button class="button" id='btnLoad'>Load Game</button>
+    <input class="input" type='text' id='txtLoadID' placeholder="Enter the Game ID to load">
+</div>
 
 <script src="Ui/boardUi.js"></script>
 <script src="js/util.js"></script>

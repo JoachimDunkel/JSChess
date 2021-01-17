@@ -72,6 +72,44 @@ wsServer.on("request", request => {
                     client_map[c.clientID].connection.send(JSON.stringify(payload))
             })
         }
+
+        if (msg.method === "load") {
+            const clID = msg.clientID;
+            const gameID = msg.gameID;
+
+            if (msg.gameState == null) {
+                const payload = {
+                    "method": "error",
+                    "text": "Wrong ID"
+                }
+                client_map[clID].connection.send(JSON.stringify(payload))
+                return;
+            }
+
+            delete game_map[gameID];
+
+            game_map[gameID] = {
+                "id": gameID,
+                "players": [],
+                "gameState": msg.gameState
+            }
+
+            const payload = {
+                "method": "create",
+                "game": game_map[gameID]
+            }
+            console.log("Cl = " + clID + " " + client_map[clID]);
+            const cl_connection = client_map[clID].connection;
+            cl_connection.send(JSON.stringify(payload));
+
+            const forJoin = {
+                "method": "join",
+                "clientID": clID,
+                "gameID": game_map[gameID].id,
+                "gameState": msg.gameState
+            }
+            gameJoin(forJoin);
+        }
     })
 
     const clID = uuidv1();
@@ -126,6 +164,12 @@ function gameJoin(msg) {
     }
     console.log("Join method")
 
+    let state = null;
+    if (game_map[gameID]) {
+        if (game_map[gameID].gameState)
+            state = game_map[gameID].gameState;
+    }
+
     const color = {"0": "White", "1": "Black"}[game.players.length]
 
     game.players.push({
@@ -137,8 +181,10 @@ function gameJoin(msg) {
         const payload = {
             "method": "join",
             "start": true,
-            "game": game
+            "game": game,
+            "gameState": state
         }
+        console.log("Join method1")
         game.players.forEach(c => {
             client_map[c.clientID].connection.send(JSON.stringify(payload))
         })

@@ -22,6 +22,13 @@ document.getElementById("btnJoin").onclick=
             click_sound.play();
         }
     }
+
+document.getElementById("btnLoad").onclick=
+    function () {
+        if(!click_sound.mute) {
+            click_sound.play();
+        }
+    }
 let checkSoundEffects=document.querySelector('input[value="mute_all"]');
 checkSoundEffects.addEventListener('change',()=> {
     if (checkSoundEffects.checked) {

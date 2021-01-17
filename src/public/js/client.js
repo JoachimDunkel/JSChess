@@ -11,6 +11,8 @@ let ws = new WebSocket("ws://localhost:8080");
 const newGameBtn = document.getElementById("newGameBtn");
 const btnJoin = document.getElementById("btnJoin");
 const inputGame = document.getElementById("txtGameID");
+const btnLoad = document.getElementById("btnLoad");
+const loadGame = document.getElementById("txtLoadID");
 
 btnJoin.addEventListener("click", e => {
     if (!gameID) {
@@ -31,6 +33,23 @@ newGameBtn.addEventListener("click", e => {
     }
     ws.send(JSON.stringify(payload));
 })
+
+btnLoad.addEventListener("click", e => {
+    if (!gameID) {
+        gameID = loadGame.value;
+        if (!gameID)
+            return;
+    }
+    // let gameState = GameState.fromJsonObject(JSON.parse(localStorage.getItem(gameID)));
+    const payload = {
+        "method": "load",
+        "clientID": clID,
+        "gameID": gameID,
+        "gameState": JSON.parse(localStorage.getItem(gameID))
+    }
+    ws.send(JSON.stringify(payload));
+})
+
 
 function play() {
     activeTurn = false;
@@ -89,6 +108,8 @@ ws.onmessage = message => {
             document.getElementById("btnJoin").remove();
             document.getElementById("txtGameID").remove();
             document.getElementById("storage").remove();
+            document.getElementById("btnLoad").remove();
+            document.getElementById("txtLoadID").remove();
             document.getElementById("gameID").innerText = "Game Started, it's opponent's turn";
             let white;
             if (currentColor === "White") {
@@ -101,6 +122,22 @@ ws.onmessage = message => {
             let init_obj = init(white);
             gameObject = init_obj[0];
             viewObject = init_obj[1];
+
+            if (msg.gameState) {
+                console.log("loading state: " + msg.gameState);
+                let gameState = GameState.fromJsonObject(msg.gameState);
+                gameObject.gameState = gameState;
+
+                if (currentColor === "White") {
+                    gameObject.gameState.setMyColor(Player.WHITE);
+                    gameObject.startTurn();
+                } else {
+                    gameObject.gameState.setMyColor(Player.BLACK);
+                }
+                gameObject.updateGameStateEvent.trigger(gameState);
+                console.log("Color: " + gameObject.gameState.myColor);
+
+            }
         }
     }
 
@@ -110,7 +147,7 @@ ws.onmessage = message => {
         gameObject.gameState = gameState;
         gameObject.gameState.changeActivePlayer();
         gameObject.updateGameStateEvent.trigger(gameState);
-        localStorage.setItem(gameID, msg.gameState);
+        localStorage.setItem(gameID, JSON.stringify(gameState));
         console.log("Color: " + gameObject.gameState.myColor);
         activeTurn = true;
         document.getElementById("gameID").innerText = "Your Turn";
