@@ -21,8 +21,8 @@ class Controller {
             this._game.startTurn();
             this._game.gameState.setMyColor(Player.WHITE);
         } else {
-            this._game.updateGameStateEvent.trigger(this._game.gameState);
             this._game.gameState.setMyColor(Player.BLACK);
+            this._game.updateGameStateEvent.trigger(this._game.gameState);
         }
     }
 }

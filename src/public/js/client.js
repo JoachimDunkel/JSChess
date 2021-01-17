@@ -88,10 +88,9 @@ ws.onmessage = message => {
         // Save the gamestate to the webstorage
         // console.log("Game State: " + JSON.stringify(initValues[0].gameState.board));
         // Board.fromJsonObject(initValues[0].gameState)
-
-        gameObject.gameState = msg.gameState;
-        // viewObject.updateBoard(GameState.fromJsonObject(msg.gameState));
-        gameObject.updateGameStateEvent.trigger(GameState.fromJsonObject(msg.gameState));
+        let gameState = GameState.fromJsonObject(msg.gameState);
+        gameObject.gameState = gameState;
+        gameObject.updateGameStateEvent.trigger(gameState);
         localStorage.setItem(gameID, gameObject.gameState);
         activeTurn = true;
         gameObject.startTurn();
