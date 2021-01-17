@@ -49,11 +49,11 @@ wsServer.on("request", request => {
                 "clientID": clID,
                 "gameID": game_map[gameID].id
             }
-            gameJoin(forJoin);
+            gameJoin(forJoin, false);
         }
 
         if (msg.method === "join") {
-            gameJoin(msg);
+            gameJoin(msg,false);
         }
 
         if (msg.method === "play") {
@@ -99,7 +99,7 @@ wsServer.on("request", request => {
                 "gameID": game_map[gameID].id,
                 "gameState": msg.gameState
             }
-            gameJoin(forJoin);
+            gameJoin(forJoin, true);
         }
     })
 
@@ -117,14 +117,15 @@ wsServer.on("request", request => {
     conn.send(JSON.stringify(payload))
 })
 
-function gameJoin(msg) {
+function gameJoin(msg, load) {
     const clID = msg.clientID;
     const gameID = msg.gameID;
     const game = game_map[gameID];
     let state = null;
-    if (game_map[gameID].gameState)
-        state = game_map[gameID].gameState;
-
+    if (load) {
+        if (game_map[gameID].gameState)
+            state = game_map[gameID].gameState;
+    }
     if (game == null) {
         const payload = {
             "method": "error",
