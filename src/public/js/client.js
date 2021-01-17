@@ -3,6 +3,7 @@ let gameID = null;
 let currentColor = null;
 let gameObject = null;
 let viewObject = null;
+let rotated = false;
 let activeTurn = false;
 
 let ws = new WebSocket("ws://localhost:8080");
@@ -32,15 +33,14 @@ newGameBtn.addEventListener("click", e => {
 })
 
 function play() {
-    // console.log("Game State: " + JSON.stringify(gameObj.gameState));
     activeTurn = false;
-    gameObject.gameState.changeActivePlayer();
     const payload = {
         "method": "play",
         "clientID": clID,
         "gameID": gameID,
         "gameState": gameObject.gameState
     }
+    // gameObject.gameState.changeActivePlayer();
     ws.send(JSON.stringify(payload));
 }
 
@@ -69,9 +69,10 @@ ws.onmessage = message => {
 
         if (msg.start) {
             document.getElementById("gameID").remove();
-            let white = false;
+            let white;
             if (currentColor === "White") {
                 white = true;
+                activeTurn = true;
             } else {
                 white = false;
             }
@@ -86,12 +87,13 @@ ws.onmessage = message => {
     if (msg.method === "update") {
         // Get new gamestate from the server
         // Save the gamestate to the webstorage
-        // console.log("Game State: " + JSON.stringify(initValues[0].gameState.board));
-        // Board.fromJsonObject(initValues[0].gameState)
+
         let gameState = GameState.fromJsonObject(msg.gameState);
         gameObject.gameState = gameState;
+        gameObject.gameState.changeActivePlayer();
         gameObject.updateGameStateEvent.trigger(gameState);
-        localStorage.setItem(gameID, gameObject.gameState);
+        localStorage.setItem(gameID, msg.gameState);
+        console.log("Color: " + gameObject.gameState.myColor);
         activeTurn = true;
         gameObject.startTurn();
     }
@@ -107,4 +109,12 @@ function getColor() {
     } else {
         return Player.BLACK;
     }
+}
+
+function getRotated() {
+    return rotated;
+}
+
+function setRotated(value) {
+    rotated = value;
 }

@@ -77,16 +77,16 @@ class BoardUi {
             let piece_name = pieces[i].getImageSource();
             let piece = new Image();
             piece.src = "images/"+piece_name;
-            console.log("Board Visual piece_name_b ",piece.src);
+            // console.log("Board Visual piece_name_b ",piece.src);
 
             let uiPosition = position;
             if(rotate){
                 uiPosition = Util.RotatePositionY180(position);
             }
             let location = Util.TwoToOneDimension(uiPosition);
-            console.log("Piece_name_b position",location);
+            // console.log("Piece_name_b position",location);
 
-            console.log("position " + uiPosition);
+            // console.log("position " + uiPosition);
 
             //probably not the best idea.. (but it should be distinguishable from the cells right ?
             piece.id = 1000 + location;

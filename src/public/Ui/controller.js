@@ -17,6 +17,7 @@ class Controller {
 
     run(white){
         this._view.initUi();
+
         if (white) {
             this._game.startTurn();
             this._game.gameState.setMyColor(Player.WHITE);

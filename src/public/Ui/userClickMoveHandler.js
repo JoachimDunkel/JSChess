@@ -16,39 +16,40 @@ class UserClickMoveHandler {
     }
 
     handleUserClickEvent(cellId, position){
-        if(!this.userHasAlreadyClickedCell){
-            if(this.userClickedOwnPiece(position)){
-                if(select_sound.mute!==true) {
-                    select_sound.play();
+        if (activeTurn) {
+            if (!this.userHasAlreadyClickedCell) {
+                if (this.userClickedOwnPiece(position)) {
+                    if (select_sound.mute !== true) {
+                        select_sound.play();
+                    }
+                    this.fromCellId = cellId;
+                    this.fromPosition = position;
+                    this.userHasAlreadyClickedCell = true;
+                    this.highlightCell();
+                    if (gameObject.moveHandler)
+                        this.highlightPossibleMoves(this.fromPosition);
+                } else {
+                    this.reset();
                 }
-                this.fromCellId = cellId;
-                this.fromPosition = position;
-                this.userHasAlreadyClickedCell = true;
-                this.highlightCell();
-                this.highlightPossibleMoves(this.fromPosition);
-            }
-            else{
+            } else {
+                this.toPosition = position;
+
+                let isInPossibleMoves = false;
+                let cellIdUserClickedAt = Util.TwoToOneDimension(this.toPosition);
+                for (const thisCellId of this.possibleMovesCellIds) {
+                    if (thisCellId === cellIdUserClickedAt) {
+                        isInPossibleMoves = true;
+                        break;
+                    }
+                }
+
+                if (isInPossibleMoves) {
+                    this.playEvent.trigger([this.fromPosition, this.toPosition]);
+                }
+                this.undoCellHighlight();
+                this.undoHighlightPossibleMoves();
                 this.reset();
             }
-        }
-        else{
-            this.toPosition = position;
-
-            let isInPossibleMoves = false;
-            let cellIdUserClickedAt = Util.TwoToOneDimension(this.toPosition);
-            for (const thisCellId of this.possibleMovesCellIds) {
-                if(thisCellId === cellIdUserClickedAt){
-                    isInPossibleMoves = true;
-                    break;
-                }
-            }
-
-            if(isInPossibleMoves){
-                this.playEvent.trigger([this.fromPosition, this.toPosition]);
-            }
-            this.undoCellHighlight();
-            this.undoHighlightPossibleMoves();
-            this.reset();
         }
     }
 
