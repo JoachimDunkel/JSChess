@@ -48,7 +48,10 @@ class Game {
         if(move !== null){
             this.gameState.update(move);
         }
-        this.updateGameState();
+
+        this.gameState.
+        this.startTurn();
+        //this.updateGameState();
     }
 
     gameOver(gameStatus){
@@ -58,7 +61,6 @@ class Game {
 
     updateGameState(){
         this.updateGameStateEvent.trigger(this.gameState);
-        console.log("Update game state event triggered");
     }
 
     requestPossibleMoves(fromPosition){

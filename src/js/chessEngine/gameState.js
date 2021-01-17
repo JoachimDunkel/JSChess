@@ -254,4 +254,15 @@ class GameState {
             this.whiteIsInCheck = false;
         }
     }
+
+    changeActivePlayer(){
+        if(this.myColor === Player.WHITE){
+            this.myColor = Player.BLACK;
+            this.opponenColor = Player.WHITE;
+        }
+        else{
+            this.myColor = Player.WHITE;
+            this.opponenColor = Player.BLACK;
+        }
+    }
 }
