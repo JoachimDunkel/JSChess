@@ -1,7 +1,10 @@
 let clID = null;
 let gameID = null;
 let currentColor = null;
-let initValues = null;
+let gameObject = null;
+let viewObject = null;
+let activeTurn = false;
+
 let ws = new WebSocket("ws://localhost:8080");
 
 const newGameBtn = document.getElementById("newGameBtn");
@@ -30,11 +33,13 @@ newGameBtn.addEventListener("click", e => {
 
 function play() {
     // console.log("Game State: " + JSON.stringify(gameObj.gameState));
+    activeTurn = false;
+    gameObject.gameState.changeActivePlayer();
     const payload = {
         "method": "play",
         "clientID": clID,
         "gameID": gameID,
-        "gameState": initValues[0].gameState
+        "gameState": gameObject.gameState
     }
     ws.send(JSON.stringify(payload));
 }
@@ -64,7 +69,15 @@ ws.onmessage = message => {
 
         if (msg.start) {
             document.getElementById("gameID").remove();
-            initValues = init();
+            let white = false;
+            if (currentColor === "White") {
+                white = true;
+            } else {
+                white = false;
+            }
+            let init_obj = init(white);
+            gameObject = init_obj[0];
+            viewObject = init_obj[1];
         }
 
         // console.log("Joined game: " + msg.game.id);
@@ -76,12 +89,23 @@ ws.onmessage = message => {
         // console.log("Game State: " + JSON.stringify(initValues[0].gameState.board));
         // Board.fromJsonObject(initValues[0].gameState)
 
-        initValues[0].gameState = msg.gameState;
-        initValues[1].updateBoard(GameState.fromJsonObject(msg.gameState));
-        localStorage.setItem(gameID, initValues[0].gameState);
+        gameObject.gameState = msg.gameState;
+        // viewObject.updateBoard(GameState.fromJsonObject(msg.gameState));
+        gameObject.updateGameStateEvent.trigger(GameState.fromJsonObject(msg.gameState));
+        localStorage.setItem(gameID, gameObject.gameState);
+        activeTurn = true;
+        gameObject.startTurn();
     }
 
     if (msg.method === "error") {
         document.getElementById("gameID").innerText = "Error! " + msg.text;
+    }
+}
+
+function getColor() {
+    if (currentColor === "White") {
+        return Player.WHITE;
+    } else {
+        return Player.BLACK;
     }
 }

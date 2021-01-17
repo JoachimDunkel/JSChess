@@ -3,7 +3,7 @@ $( document ).ready(function() {
 
 });
 
-function init() {
+function init(white) {
 
 	let connectionHandler = new ConnectionHandler();
 	let game = new Game(connectionHandler);
@@ -11,7 +11,7 @@ function init() {
 	let view = new View();
 	let controller = new Controller(view, game);
 
-	controller.run();
+	controller.run(white);
 	console.log("Finished main");
 
 	return [game, view];
