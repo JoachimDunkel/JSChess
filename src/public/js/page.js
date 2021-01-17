@@ -27,7 +27,7 @@ function getStorage() {
 function storageList() {
 
     let nav = document.createElement('nav');
-    let list = document.createElement('ul');
+    let list = document.createElement('ol');
 
     for (let i = 0; i < localStorage.length; i++) {
         let item = document.createElement('li');

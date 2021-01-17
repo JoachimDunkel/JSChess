@@ -24,13 +24,19 @@
 <div id="board_game"></div>
 
 <div>
-    <input type="checkbox" id="mute" name="mute" value="mute" checked>
-    <label class="text" for="mute">Mute Music</label>
+    <label class="switch" v-if="option.icon && option.icon === 'mute'" for="mute">
+        <input type="checkbox" id="mute" name="mute" value="mute" checked="false"/>
+        <span class="slider round"></span>
+    </label>
+    <label class="text" for="mute">Music</label>
 </div>
 
 <div>
-    <input type="checkbox" id="mute_all" name="mute_all" value="mute_all">
-    <label class="text" for="mute_all">Mute Sound Effects</label>
+    <label class="switch" v-if="option.icon && option.icon === 'mute'" for="mute_all">
+        <input type="checkbox" id="mute_all" name="mute_all" value="mute_all" checked="false"/>
+        <span class="slider round"></span>
+    </label>
+    <label class="text" for="mute_all">Sound effects</label>
 </div>
 
 <div id="storage"></div>
