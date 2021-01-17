@@ -77,6 +77,15 @@ wsServer.on("request", request => {
             const clID = msg.clientID;
             const gameID = msg.gameID;
 
+            if (msg.gameState == null) {
+                const payload = {
+                    "method": "error",
+                    "text": "Wrong ID"
+                }
+                client_map[clID].connection.send(JSON.stringify(payload))
+                return;
+            }
+
             delete game_map[gameID];
 
             game_map[gameID] = {
