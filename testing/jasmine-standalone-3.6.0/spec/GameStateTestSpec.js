@@ -52,7 +52,7 @@ describe("Game state", () =>{
 
         let move = new Move(rook, MoveType.DEFAULT, new Position(3,0));
         gameState.myColor = Player.BLACK;
-        gameState.opponenColor = Player.WHITE;
+        gameState.opponentColor = Player.WHITE;
         gameState.updateCastlingRights(move);
         expect(gameState.castlePermissions).toBe(7);
     });

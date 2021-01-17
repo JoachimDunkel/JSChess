@@ -11,10 +11,10 @@ class MoveValidator {
         newGameState.setMyColor(moveCopy.piece.getPlayerType());
         newGameState.makeMove(moveCopy);
         newGameState.setMyColor(thisPlayer);
-        let opponentPieces = newGameState.board.getAllPiecesOfPlayer(newGameState.opponenColor);
+        let opponentPieces = newGameState.board.getAllPiecesOfPlayer(newGameState.opponentColor);
 
         let myKingPosition = newGameState.getMyKing().getPosition();
-        newGameState.setMyColor(newGameState.opponenColor);
+        newGameState.setMyColor(newGameState.opponentColor);
         for (const opponentPiece of opponentPieces) {
             let moveGenerator = new MoveGenerator(newGameState);
             moveGenerator.withCastleMoves = false;

@@ -59,7 +59,7 @@ class GameState {
         this.myColor = myColor;
         this.opponentColor = Player.BLACK
         if(this.myColor === Player.BLACK){
-            this.opponenColor = Player.WHITE;
+            this.opponentColor = Player.WHITE;
         }
     }
 
