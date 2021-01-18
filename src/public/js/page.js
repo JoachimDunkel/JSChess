@@ -39,10 +39,12 @@ function allowDrop(ev) {
 
 function drag(ev) {
     ev.dataTransfer.setData("Text", localStorage.key(Math.floor(Math.random() * localStorage.length)));
+    document.getElementById("txtLoadID").value = "";
 }
 
 function drop(ev) {
     ev.preventDefault();
+
     ev.target.value = ev.dataTransfer.getData("Text");
 
 }
