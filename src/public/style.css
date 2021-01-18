@@ -108,6 +108,7 @@ nav ol {
     height:200px;
     width:30%;
     background-color: #666666;
+    border:3px solid #aaaaaa;
 }
 nav ol {
     overflow:hidden;
@@ -218,11 +219,17 @@ input:checked + .slider:before {
     padding:10px;
     font-size:20px;
     color: #bcbcbc;
-    border:5px solid #aaaaaa;
+    border:3px solid #aaaaaa;
+    position: relative;
 }
 
 #random {
-    background-color: #a9a9a9;
-    border:3px solid #aa8351;
-    color: #AB4642;
+    background-color: #AB4642;
+    color: #bcbcbc;
+    /*border:3px solid #aa8351;*/
+    border-radius: 12px;
+    position: absolute;
+    left: 35%;
+    bottom: 0;
+    padding: 7px;
 }
