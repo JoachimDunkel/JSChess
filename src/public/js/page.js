@@ -6,23 +6,13 @@ window.onload = function(){
 }
 
 function copy() {
-    let copyText = document.getElementById("inputID");
+    let toCopy = document.getElementById("inputID");
 
-    copyText.select();
+    toCopy.select();
 
     document.execCommand("copy");
 
-    alert("Game ID copied! ");
-}
-
-function getStorage() {
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-        console.log({key, value})
-    }
-
-    Object.keys(localStorage).forEach(key => console.log(localStorage[key]));
+    alert("Game ID copied!");
 }
 
 
