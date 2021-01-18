@@ -27,7 +27,22 @@ wsServer.on("request", request => {
     conn.on("close", () => console.log("Connection Closed"))
     conn.on("message", message => {
         const msg = JSON.parse(message.utf8Data)
+        if (msg.method === "closing") {
+            const msg = JSON.parse(message.utf8Data)
+            console.log("Cl close = " + msg.clientID);
+            if (msg.gameID && game_map[msg.gameID]) {
+                const payload = {
+                    "method": "disconnect"
+                }
 
+                game_map[msg.gameID].players.forEach(c => {
+                    if (c.clientID !== clID)
+                        client_map[c.clientID].connection.send(JSON.stringify(payload))
+                })
+                delete game_map[msg.gameID];
+            }
+
+        }
         if (msg.method === "create") {
             const clID = msg.clientID;
             const gameID = uuidv1();
@@ -162,7 +177,6 @@ function gameJoin(msg) {
         client_map[clID].connection.send(JSON.stringify(payload))
         return;
     }
-    console.log("Join method")
 
     let state = null;
     if (game_map[gameID]) {
@@ -184,7 +198,6 @@ function gameJoin(msg) {
             "game": game,
             "gameState": state
         }
-        console.log("Join method1")
         game.players.forEach(c => {
             client_map[c.clientID].connection.send(JSON.stringify(payload))
         })

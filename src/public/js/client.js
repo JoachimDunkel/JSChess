@@ -8,6 +8,15 @@ let activeTurn = false;
 
 let ws = new WebSocket("ws://localhost:8080");
 
+window.addEventListener("beforeunload", function (event) {
+    const payload = {
+        "method": "closing",
+        "clientID": clID,
+        "gameID": gameID
+    }
+    ws.send(JSON.stringify(payload));
+});
+
 const newGameBtn = document.getElementById("newGameBtn");
 const btnJoin = document.getElementById("btnJoin");
 const inputGame = document.getElementById("txtGameID");
@@ -40,7 +49,7 @@ btnLoad.addEventListener("click", e => {
         if (!gameID)
             return;
     }
-    // let gameState = GameState.fromJsonObject(JSON.parse(localStorage.getItem(gameID)));
+
     const payload = {
         "method": "load",
         "clientID": clID,
@@ -156,6 +165,11 @@ ws.onmessage = message => {
 
     if (msg.method === "error") {
         document.getElementById("gameID").innerText = "Error! " + msg.text;
+    }
+
+    if (msg.method === "disconnect") {
+        alert("Opponent Disconnected!");
+        window.location.reload(false);
     }
 }
 
