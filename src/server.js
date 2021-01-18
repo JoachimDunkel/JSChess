@@ -45,6 +45,13 @@ wsServer.on("request", request => {
         }
         if (msg.method === "create") {
             const clID = msg.clientID;
+
+            if (msg.gameID) {
+                if (game_map[msg.gameID]) {
+                    delete game_map[msg.gameID];
+                    console.log("Delete old game ");
+                }
+            }
             const gameID = uuidv1();
             game_map[gameID] = {
                 "id": gameID,

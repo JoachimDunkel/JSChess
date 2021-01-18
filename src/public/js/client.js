@@ -27,6 +27,7 @@ btnJoin.addEventListener("click", e => {
     if (!gameID) {
         gameID = inputGame.value;
     }
+    document.getElementById("newGameBtn").disabled = false;
     const payload = {
         "method": "join",
         "clientID": clID,
@@ -38,8 +39,10 @@ btnJoin.addEventListener("click", e => {
 newGameBtn.addEventListener("click", e => {
     const payload = {
         "method": "create",
-        "clientID": clID
+        "clientID": clID,
+        "gameID" : gameID
     }
+    document.getElementById("newGameBtn").disabled = true;
     ws.send(JSON.stringify(payload));
 })
 
@@ -49,7 +52,7 @@ btnLoad.addEventListener("click", e => {
         if (!gameID)
             return;
     }
-
+    document.getElementById("newGameBtn").disabled = false;
     const payload = {
         "method": "load",
         "clientID": clID,

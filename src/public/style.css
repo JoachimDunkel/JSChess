@@ -35,6 +35,13 @@ div img {
     width: 130px;
 }
 
+.button:disabled {
+    background-color: #666666;
+}
+.button:disabled:hover {
+    background-color: #8a8a8a;
+}
+
 .button {
     transition-duration: 0.4s;
 }
