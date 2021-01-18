@@ -116,12 +116,13 @@ ws.onmessage = message => {
         })
 
         if (msg.start) {
-            document.getElementById("newGameBtn").remove();
-            document.getElementById("btnJoin").remove();
-            document.getElementById("txtGameID").remove();
+            newGameBtn.remove();
+            btnJoin.remove();
+            inputGame.remove();
+            btnLoad.remove();
+            loadGame.remove();
             document.getElementById("storage").remove();
-            document.getElementById("btnLoad").remove();
-            document.getElementById("txtLoadID").remove();
+            document.getElementById("drag1").remove();
             document.getElementById("gameID").innerText = "Game Started, it's opponent's turn";
             let white;
             if (currentColor === "White") {

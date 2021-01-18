@@ -211,3 +211,18 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+#drag1 {
+    background-color: #007069;
+    width:30%;
+    padding:10px;
+    font-size:20px;
+    color: #bcbcbc;
+    border:5px solid #aaaaaa;
+}
+
+#random {
+    background-color: #a9a9a9;
+    border:3px solid #aa8351;
+    color: #AB4642;
+}

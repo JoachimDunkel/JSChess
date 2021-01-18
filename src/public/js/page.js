@@ -33,3 +33,16 @@ function storageList() {
     document.getElementById("storage").appendChild(nav);
 }
 
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("Text", localStorage.key(Math.floor(Math.random() * localStorage.length)));
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    ev.target.value = ev.dataTransfer.getData("Text");
+
+}
