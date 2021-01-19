@@ -3,6 +3,21 @@ window.onload = function(){
     document.getElementById("txtLoadID").value = "";
     // localStorage.clear();
     storageList();
+
+    let canvas = document.getElementById('logo');
+    if (canvas && canvas.getContext) {
+        let text = canvas.getContext('2d');
+        if (text) {
+            text.shadowOffsetX = 8;
+            text.shadowOffsetY = 8;
+            text.shadowBlur = 6;
+            text.shadowColor = 'rgba(0, 9, 59, 0.5)';
+
+            text.font = 'bold 50px Verdana';
+            text.fillStyle = "#AB4642";
+            text.fillText('HTML5 CHESS', 0, 50);
+        }
+    }
 }
 
 function copy() {
