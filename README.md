@@ -28,12 +28,13 @@ With the connection string sent to the second player a game can be played.
 
 
 <h2>Known issues </h2>
-* The black - board should be inverted along the x-Axis
 * When the game stops running both players should be notified
 * Board does not show files and Rank numbering
 * No coordinate to fileRank/numbering translation.
 * Code quality in general 
   (a lot of refactoring has to be done)
+* using a server as the backend is not really the best way / using a peerToPeer connection would make more sense.
+  (but was a requirement)
   
 
 <h2>Licensing</h2>
