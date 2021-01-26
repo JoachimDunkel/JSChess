@@ -23,12 +23,10 @@ class Game {
     tryMakeMove(moveUserWantsToMake){
         let from = moveUserWantsToMake[0];
         let to = moveUserWantsToMake[1];
-        if(this.gameState.myColor === Player.WHITE){
 
-            let rotatedFrom = Util.RotatePositionY180(from);
-            let rotatedTo = Util.RotatePositionY180(to);
-            moveUserWantsToMake = [rotatedFrom, rotatedTo];
-        }
+        let rotatedFrom = this._uiPositionCoordinateTranslation(from);
+        let rotatedTo = this._uiPositionCoordinateTranslation(to);
+        moveUserWantsToMake = [rotatedFrom, rotatedTo];
 
         let move = this.moveHandler.lookupMove(moveUserWantsToMake);
 
@@ -38,10 +36,6 @@ class Game {
         this.gameState.update(move);
         play();
 
-        //This is is not needed if server is up user the out-commented comment then
-        //TODO only for debugging
-        // this.gameState.changeActivePlayer();
-        // this.startTurn();
 
         this.updateGameStateEvent.trigger(this.gameState);
     }
@@ -52,15 +46,15 @@ class Game {
     }
 
     requestPossibleMoves(fromPosition){
-        let rotatedFrom = this._rotatePositionIfWhite(fromPosition);
+        let rotatedFrom = this._uiPositionCoordinateTranslation(fromPosition);
 
         let possibleMoves = this.moveHandler.requestPossibleMovesForPosition(rotatedFrom);
         let parsedMoves = [];
         for (const move of possibleMoves) {
             let newMove = _.cloneDeep(move);
 
-            newMove.newPosition = this._rotatePositionIfWhite(newMove.newPosition);
-            newMove.previousPosition = this._rotatePositionIfWhite(newMove.previousPosition);
+            newMove.newPosition = this._uiPositionCoordinateTranslation(newMove.newPosition);
+            newMove.previousPosition = this._uiPositionCoordinateTranslation(newMove.previousPosition);
             parsedMoves.push(newMove);
         }
         return parsedMoves;
@@ -71,16 +65,16 @@ class Game {
         let positions = []
         for (const piece of myPieces) {
             let position = _.cloneDeep(piece.getPosition());
-            position = this._rotatePositionIfWhite(position);
+            position = this._uiPositionCoordinateTranslation(position);
             positions.push(position);
         }
         return positions;
     }
 
-    _rotatePositionIfWhite(position){
+    _uiPositionCoordinateTranslation(position){
         if(this.gameState.myColor === Player.WHITE){
             return Util.RotatePositionY180(position);
         }
-        return position;
+        return Util.RotatePositionX180(position);
     }
 }
