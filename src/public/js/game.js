@@ -24,8 +24,8 @@ class Game {
         let from = moveUserWantsToMake[0];
         let to = moveUserWantsToMake[1];
 
-        let rotatedFrom = this._uiPositionCoordinateTranslation(from);
-        let rotatedTo = this._uiPositionCoordinateTranslation(to);
+        let rotatedFrom = Util._uiPositionCoordinateTranslation(from, this.gameState);
+        let rotatedTo = Util._uiPositionCoordinateTranslation(to, this.gameState);
         moveUserWantsToMake = [rotatedFrom, rotatedTo];
 
         let move = this.moveHandler.lookupMove(moveUserWantsToMake);
@@ -46,15 +46,15 @@ class Game {
     }
 
     requestPossibleMoves(fromPosition){
-        let rotatedFrom = this._uiPositionCoordinateTranslation(fromPosition);
+        let rotatedFrom = Util._uiPositionCoordinateTranslation(fromPosition, this.gameState);
 
         let possibleMoves = this.moveHandler.requestPossibleMovesForPosition(rotatedFrom);
         let parsedMoves = [];
         for (const move of possibleMoves) {
             let newMove = _.cloneDeep(move);
 
-            newMove.newPosition = this._uiPositionCoordinateTranslation(newMove.newPosition);
-            newMove.previousPosition = this._uiPositionCoordinateTranslation(newMove.previousPosition);
+            newMove.newPosition = Util._uiPositionCoordinateTranslation(newMove.newPosition, this.gameState);
+            newMove.previousPosition = Util._uiPositionCoordinateTranslation(newMove.previousPosition , this.gameState);
             parsedMoves.push(newMove);
         }
         return parsedMoves;
@@ -65,16 +65,9 @@ class Game {
         let positions = []
         for (const piece of myPieces) {
             let position = _.cloneDeep(piece.getPosition());
-            position = this._uiPositionCoordinateTranslation(position);
+            position = Util._uiPositionCoordinateTranslation(position, this.gameState);
             positions.push(position);
         }
         return positions;
-    }
-
-    _uiPositionCoordinateTranslation(position){
-        if(this.gameState.myColor === Player.WHITE){
-            return Util.RotatePositionY180(position);
-        }
-        return Util.RotatePositionX180(position);
     }
 }
