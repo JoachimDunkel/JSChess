@@ -1,7 +1,7 @@
 
 <h2>General Info </h2>
 
-This is a two player chess game that was build a project that was build for the course Web Technologies at TU Graz.
+This is a two player chess game that was build a project that was build for a university course.
 
 <h3>Technologies</h3>
 This was implemented in "pure" html, css and javascript.
@@ -21,20 +21,23 @@ With the connection string sent to the second player a game can be played.
 
 
 <h2>Features</h2>
-* Rejoining a quit game.
-* Background and click sound-effects.
-* Highlighting possible moves in the Ui
-
-
+<ul>
+<li>Rejoining a quit game.</li>
+<li>Background and click sound-effects.</li>
+<li>Highlighting possible moves in the Ui</li>
+</ul>
 
 <h2>Known issues </h2>
-* When the game stops running both players should be notified
-* Board does not show files and Rank numbering
-* No coordinate to fileRank/numbering translation.
-* Code quality in general 
-  (a lot of refactoring has to be done)
-* using a server as the backend is not really the best way / using a peerToPeer connection would make more sense.
-  (but was a requirement)
+
+<ul>
+<li>When the game stops running both players should be notified</li>
+<li>Board does not show files and Rank numbering</li>
+<li>No coordinate to fileRank/numbering translation.</li>
+<li>Code quality in general 
+  (a lot of refactoring has to be done)</li>
+<li>using a server as the backend is not really the best way / using a peerToPeer connection would make more sense.
+  (but was a requirement)</li>
+</ul> 
   
 
 <h2>Licensing</h2>
