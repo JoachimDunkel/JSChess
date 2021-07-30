@@ -36,7 +36,7 @@ With the connection string sent to the second player a game can be played.
 <li>Code quality in general 
   (a lot of refactoring has to be done)</li>
 <li>using a server as the backend is not really the best way / using a peerToPeer connection would make more sense.
-  (but was a requirement)</li>
+  (but a server-backend was a requirement)</li>
 </ul> 
   
 
